@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Description> Common class and static utilities for SeventhServices.Resource. </Description>
+    <Description> Manage Resource from Seventh Project.</Description>
   </PropertyGroup>
 
   <ItemGroup>
