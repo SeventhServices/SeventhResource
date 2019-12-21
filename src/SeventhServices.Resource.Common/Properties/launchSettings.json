@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SeventhServices.Asset.Common": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}
