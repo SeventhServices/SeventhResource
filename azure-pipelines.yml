@@ -21,7 +21,11 @@ steps:
   inputs:
     command: 'build'
     arguments: '-c $(buildConfiguration)'
-    
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+
 - task: DotNetCoreCLI@2
   inputs:
     command: 'pack'
