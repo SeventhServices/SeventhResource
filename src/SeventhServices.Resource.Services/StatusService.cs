@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SeventhServices.Client.Common.Params;
 using SeventhServices.Resource.Common.Classes;
 using SeventhServices.Resource.Common.Classes.Options;
@@ -39,7 +41,6 @@ namespace SeventhServices.Resource.Services
                 ConfigureWatcher.RefreshConfigure<Status>(Status);
             }
         }
-
         public Account Account
         {
             get
@@ -54,7 +55,6 @@ namespace SeventhServices.Resource.Services
                 ConfigureWatcher.RefreshConfigure<Status>(Status);
             }
         }
-
         public GameVersion GameVersion
         {
             get
@@ -72,11 +72,9 @@ namespace SeventhServices.Resource.Services
                 ConfigureWatcher.RefreshConfigure<Status>(Status);
             }
         }
-
         private Status Status { get; set; }
         public AssetSortOption SortOption { get; set; }
         public PathOption PathOption { get; set; }
-
         public StatusService SetStatusOptions(StatusOption statusOption)
         {
             GameVersion = statusOption.GameVersion;
@@ -89,17 +87,22 @@ namespace SeventhServices.Resource.Services
         }
 
         #region Event
+        public Action<GameVersion> GameVersionChangedNotice { get; set; }
+        public Action<int> AssetVersionChangedNotice { get; set; }
 
         private void GameVersionChanged(GameVersion newVersion)
         {
             RequestParams.Version = newVersion.Version;
             _logger.LogInformation($"Game version update : " +
                                    $"{Status.Version} => {newVersion.Version}");
+            Task.Run(() => GameVersionChangedNotice?.Invoke(newVersion));
+            
         }
 
         private void AssetVersionChanged(int rev)
         {
             _logger.LogInformation($"Asset version update : {Status.Revision} => {rev}");
+            Task.Run(() => AssetVersionChangedNotice?.Invoke(rev));
         }
         #endregion
 
