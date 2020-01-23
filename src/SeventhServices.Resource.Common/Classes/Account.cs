@@ -5,19 +5,19 @@ namespace SeventhServices.Resource.Common.Classes
 {
     public class Account
     {
-        public string Pid { get; set; }
+        public string Pid { get; }
 
-        public string Uuid { get; set; }
+        public string Uuid { get;}
 
-        public string EncPid { get; set; }
+        public string EncPid { get; }
 
-        public string Id { get; set; }
+        public string Id { get; }
 
-        public string Tpid { get; set; }
+        public string Tpid { get;}
 
-        public string Ivs { get; set; }
+        public string Ivs { get;}
 
-        public string EncUuid { get; set; }
+        public string EncUuid { get; }
 
         public Account()
         {

@@ -30,7 +30,6 @@ namespace SeventhServices.Resource.Common.Files
             catch
             {
                 Clear();
-                throw;
             }
         }
 
