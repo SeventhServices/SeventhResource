@@ -7,7 +7,7 @@ using SeventhServices.Resource.Common.Classes;
 using SeventhServices.Resource.Common.Enums;
 using SeventhServices.Resource.Common.Files;
 
-namespace SeventhServices.Resource.Common.Utilities
+namespace SeventhServices.Resource.Common.Helpers
 {
     public static class AccountHelper
     {

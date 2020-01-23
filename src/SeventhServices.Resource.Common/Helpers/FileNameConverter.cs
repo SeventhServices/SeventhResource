@@ -2,7 +2,7 @@
 using System.Globalization;
 using SeventhServices.Resource.Common.Crypts;
 
-namespace SeventhServices.Resource.Common
+namespace SeventhServices.Resource.Common.Utilities
 {
     public static class FileNameConverter
     {

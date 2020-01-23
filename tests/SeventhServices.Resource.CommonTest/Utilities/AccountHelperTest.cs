@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using SeventhServices.Resource.Common.Classes;
+using SeventhServices.Resource.Common.Helpers;
 using SeventhServices.Resource.Common.Utilities;
 using Xunit;
 

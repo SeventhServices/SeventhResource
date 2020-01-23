@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using SeventhServices.Resource.Common.Crypts;
 using SeventhServices.Resource.Common.Extensions;
 
-namespace SeventhServices.Resource.Common.Utilities
+namespace SeventhServices.Resource.Common.Helpers
 {
     public static class AssetCryptHelper
     {
