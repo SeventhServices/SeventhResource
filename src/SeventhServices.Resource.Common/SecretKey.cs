@@ -3,7 +3,7 @@ using SeventhServices.Resource.Common.Crypts;
 
 namespace SeventhServices.Resource.Common
 {
-    public class SecretKey : ConfigureFile
+    public class SecretKey
     {
         static SecretKey()
         {

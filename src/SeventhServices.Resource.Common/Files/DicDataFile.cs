@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using SeventhServices.Resource.Common.Abstractions;
@@ -49,7 +47,7 @@ namespace SeventhServices.Resource.Common.Files
                     SetString(list, value);
                 }
             }
-            System.IO.File.WriteAllBytes(FilePath, list.ToArray());
+            File.WriteAllBytes(FilePath, list.ToArray());
         }
 
         public void Delete()

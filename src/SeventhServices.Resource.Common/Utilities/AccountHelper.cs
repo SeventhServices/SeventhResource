@@ -3,18 +3,16 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using SeventhServices.Resource.Common;
 using SeventhServices.Resource.Common.Classes;
 using SeventhServices.Resource.Common.Enums;
 using SeventhServices.Resource.Common.Files;
 
-namespace SeventhServices.Resource.Services
+namespace SeventhServices.Resource.Common.Utilities
 {
-    public class AccountService
+    public static class AccountHelper
     {
-
-        public Account ReadFromFile(string pid, string savePath, 
-            AccountFileType accountFileType = AccountFileType.Kc)
+        public static Account ReadFromFile(string pid, string savePath,
+                            AccountFileType accountFileType = AccountFileType.Kc)
         {
             var filePath = GetAccountFilePath(pid, savePath, AccountFileType.Json);
             if (!File.Exists(filePath))
@@ -32,8 +30,12 @@ namespace SeventhServices.Resource.Services
                 File.ReadAllText(filePath));
         }
 
-        public void ConvertToFile(Account account, string savePath)
+        public static void ConvertToFile(Account account, string savePath)
         {
+            if (account == null)
+            {
+                throw new ArgumentNullException(nameof(account));
+            }
             var stringBuilder = new StringBuilder(savePath);
 
             stringBuilder.Append($"/{account.Pid}/");
@@ -45,9 +47,9 @@ namespace SeventhServices.Resource.Services
                 Directory.CreateDirectory(tempPath);
             }
 
-            var sHa1CryptoServiceProvider = new SHA1CryptoServiceProvider();
+            using var sHa1CryptoServiceProvider = new SHA1CryptoServiceProvider();
             var array = sHa1CryptoServiceProvider.ComputeHash(Encoding.ASCII.GetBytes(SecretKey.Implement.SaveDataServices));
-            
+
             foreach (var b in array)
             {
                 stringBuilder.Append($"{b,0:x2}");
@@ -77,7 +79,7 @@ namespace SeventhServices.Resource.Services
         private static string GetKcAccountFileName()
         {
             var stringBuilder = new StringBuilder();
-            var sHa1CryptoServiceProvider = new SHA1CryptoServiceProvider();
+            using var sHa1CryptoServiceProvider = new SHA1CryptoServiceProvider();
             var array = sHa1CryptoServiceProvider.ComputeHash(
                 Encoding.ASCII.GetBytes(SecretKey.Implement.SaveDataServices));
             foreach (var b in array)
@@ -87,7 +89,5 @@ namespace SeventhServices.Resource.Services
 
             return stringBuilder + ".kc";
         }
-
-
     }
 }

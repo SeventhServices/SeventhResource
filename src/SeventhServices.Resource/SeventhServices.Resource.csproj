@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SeventhServices.Client.Extensions.DependencyInjection" Version="0.1.0-CI-20191221-110428" />
-    <PackageReference Include="SeventhServices.Client.Extensions.HttpClientFactory" Version="0.1.0-CI-20191221-110428" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SeventhServices.Resource.Services\SeventhServices.Resource.Services.csproj" />
   </ItemGroup>
 

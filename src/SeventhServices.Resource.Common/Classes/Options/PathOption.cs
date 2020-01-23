@@ -13,10 +13,10 @@ namespace SeventhServices.Resource.Common.Classes.Options
         public PathOption(string rootPath)
         {
             RootPath = rootPath;
-            ConfigurePath = new ConfigurePath
-            {
-                RootPath = ConfigureWatcher.SavePath
-            };
+            //ConfigurePath = new ConfigurePath
+            //{
+            //    RootPath = ConfigureWatcher.SavePath
+            //};
             IndexPath = new IndexPath
             {
                 RootPath = Path.Combine(RootPath, "Index")

@@ -11,39 +11,34 @@ namespace SeventhServices.Resource.Services
     public static class ServiceExtension
     {
 
-        public static StatusService UseStatusOptions(this StatusService statusService, StatusOption statusOption)
+        public static OptionService UseStatusOptions(this OptionService optionService, ResourceOption options)
         {
-            if (statusOption.Account == null)
+            if (optionService.PathOption == null)
             {
-                statusService.Account = new Account(SecretKey.Implement.DefaultEncPid, SecretKey.Implement.DefaultId);
+                optionService.PathOption = new PathOption(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
             }
-            if (statusService.PathOption == null)
+            if (optionService.SortOption == null)
             {
-                statusService.PathOption = new PathOption(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
+                optionService.SortOption = new AssetSortOption();
             }
-            if (statusService.SortOption == null)
-            {
-                statusService.SortOption = new AssetSortOption();
-            }
-            return statusService.SetStatusOptions(statusOption);
+            return optionService.SetOptions(options);
         }
 
-        public static StatusService ConfigureStatusOptions(this StatusService statusService, Action<StatusOption> statusOption)
+        public static OptionService ConfigureStatusOptions(this OptionService optionService, Action<ResourceOption> statusOption)
         {
-            var defaultStatusOption = new StatusOption
+            var defaultStatusOption = new ResourceOption
             {
-                Rev = 0,
                 Account = new Account(SecretKey.Implement.DefaultEncPid, SecretKey.Implement.DefaultId),
                 PathOption = new PathOption(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)),
                 SortOption = new AssetSortOption()
             };
             statusOption(defaultStatusOption);
-            return statusService.SetStatusOptions(defaultStatusOption);
+            return optionService.SetOptions(defaultStatusOption);
         }
 
-        public static StatusService ConfigureStatusOptions(this StatusService statusService)
+        public static OptionService ConfigureOptions(this OptionService optionService)
         {
-            return ConfigureStatusOptions(statusService, o => { });
+            return ConfigureStatusOptions(optionService, o => {});
         }
     }
 }

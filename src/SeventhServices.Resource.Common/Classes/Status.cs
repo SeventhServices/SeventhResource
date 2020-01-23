@@ -2,7 +2,7 @@
 
 namespace SeventhServices.Resource.Common.Classes
 {
-    public class Status : ConfigureFile
+    public class Status
     {
         public string Version { get; set; } = "6.8.1";
         public string DownloadPath { get; set; } = string.Empty;
