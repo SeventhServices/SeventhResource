@@ -15,7 +15,7 @@
     <Authors>Sagilio</Authors>
     <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
 
-    <PackageLicense>LGPL-3.0</PackageLicense>
+    <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/SeventhServices/SeventhResource</PackageProjectUrl>
 
   </PropertyGroup>
