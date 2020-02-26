@@ -11,7 +11,7 @@ namespace Seventh.Resource.Services
     public static class ServiceExtension
     {
 
-        public static OptionService UseStatusOptions(this OptionService optionService, ResourceOption options)
+        public static ResourceLocation UseStatusOptions(this ResourceLocation optionService, ResourceOption options)
         {
             if (optionService.PathOption == null)
             {
@@ -24,7 +24,7 @@ namespace Seventh.Resource.Services
             return optionService.SetOptions(options);
         }
 
-        public static OptionService ConfigureStatusOptions(this OptionService optionService, Action<ResourceOption> statusOption)
+        public static ResourceLocation ConfigureLocation(this ResourceLocation optionService, Action<ResourceOption> statusOption)
         {
             var defaultStatusOption = new ResourceOption
             {
@@ -36,9 +36,9 @@ namespace Seventh.Resource.Services
             return optionService.SetOptions(defaultStatusOption);
         }
 
-        public static OptionService ConfigureOptions(this OptionService optionService)
+        public static ResourceLocation ConfigureOptions(this ResourceLocation optionService)
         {
-            return ConfigureStatusOptions(optionService, o => {});
+            return ConfigureLocation(optionService, o => {});
         }
     }
 }

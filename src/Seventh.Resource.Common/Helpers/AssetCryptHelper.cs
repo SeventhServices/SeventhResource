@@ -8,32 +8,68 @@ namespace Seventh.Resource.Common.Helpers
 {
     public static class AssetCryptHelper
     {
-        public static async Task DecryptWithRename(string filePath, string saveDirectory)
+        public static async Task DecryptAtDirectoryAsync(string filePath, string saveDirectory, AssetCrypt.EncVersion encVersion, bool lz4)
         {
-            await DecryptWithRename(filePath, saveDirectory, IdentifyShouldLz4(filePath))
+            var fileName = Path.GetFileName(filePath);
+            await DecryptAsync(filePath, saveDirectory.AppendPath(Rename(fileName, encVersion)), encVersion, lz4)
                 .ConfigureAwait(false);
         }
 
-        public static async Task DecryptWithRename(string filePath, string saveDirectory, bool lz4)
+        public static async Task DecryptWithRenameAsync(string filePath, string saveDirectory, bool lz4)
         {
             if (filePath == null) throw new ArgumentNullException(nameof(filePath));
-
-            var fileName = Path.GetFileName(filePath);
-            var encVersion = AssetCrypt.IdentifyEncVersion(fileName);
+            var encVersion = AssetCrypt.IdentifyEncVersion(filePath);
             if (encVersion == AssetCrypt.EncVersion.NoEnc)
             {
                 return;
             }
-            var fileBytes = File.ReadAllBytes(filePath);
-            await using var fileStream = File.OpenWrite(saveDirectory.AppendPath(Rename(fileName, encVersion)));
+            await DecryptAtDirectoryAsync(filePath, saveDirectory, encVersion, lz4)
+                .ConfigureAwait(false);
+        }
+
+        public static async Task DecryptWithRenameAsync(string filePath, string saveDirectory)
+        {
+            await DecryptWithRenameAsync(filePath, saveDirectory, IdentifyShouldLz4(filePath))
+                .ConfigureAwait(false);
+        }
+
+        public static async Task DecryptAsync(string filePath, string savePath)
+        {
+            await DecryptAsync(filePath, savePath, AssetCrypt.IdentifyEncVersion(filePath), IdentifyShouldLz4(filePath))
+                .ConfigureAwait(false);
+        }
+
+        public static async Task DecryptAsync(string filePath, string savePath, bool lz4)
+        {
+            await DecryptAsync(filePath, savePath, AssetCrypt.IdentifyEncVersion(filePath), lz4)
+                .ConfigureAwait(false);
+        }
+
+        public static async Task DecryptAsync(string filePath, string savePath, AssetCrypt.EncVersion encVersion, bool lz4)
+        {
+            var fileBytes = await File.ReadAllBytesAsync(filePath)
+                .ConfigureAwait(false);
+            await using var fileStream = File.OpenWrite(savePath);
             await fileStream.WriteAsync(
                 AssetCrypt.Decrypt(fileBytes, lz4, encVersion));
             fileStream.Close();
         }
 
-        public static string Rename(string fileName)
+        public static string Rename(string filePath)
         {
-            return Rename(fileName, AssetCrypt.IdentifyEncVersion(fileName));
+            return Rename(filePath, AssetCrypt.IdentifyEncVersion(filePath));
+        }
+
+        public static string Rename(string filePath, AssetCrypt.EncVersion encVersion)
+        {
+            var newFileName =
+                encVersion == AssetCrypt.EncVersion.Ver2
+                    ? AssetCrypt.ConvertFileName(filePath,
+                        AssetCrypt.EncVersion.Ver2,
+                        AssetCrypt.EncVersion.Ver1)
+                    : filePath;
+
+            return newFileName.Remove(newFileName.Length - 4);
         }
 
         public static bool IdentifyShouldLz4(string filePath)
@@ -47,20 +83,8 @@ namespace Seventh.Resource.Common.Helpers
             var type = fileType[^2];
 
             return Equals(type, "txt") ||
-                   Equals(type, "sql") || 
+                   Equals(type, "sql") ||
                    Equals(type, "json");
-        }
-
-        public static string Rename(string fileName, AssetCrypt.EncVersion encVersion)
-        {
-            var newFileName =
-                encVersion == AssetCrypt.EncVersion.Ver2
-                    ? AssetCrypt.ConvertFileName(fileName,
-                        AssetCrypt.EncVersion.Ver2,
-                        AssetCrypt.EncVersion.Ver1)
-                    : fileName;
-
-            return newFileName.Remove(newFileName.Length - 4);
         }
     }
 }

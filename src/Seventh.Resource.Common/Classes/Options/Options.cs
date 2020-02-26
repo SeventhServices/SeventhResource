@@ -7,5 +7,6 @@
         public PathOption PathOption { get; set; }
 
         public AssetSortOption SortOption { get; set; }
+
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
 using Seventh.Resource.Common.Crypts;
 
 namespace Seventh.Resource.Common.Helpers
@@ -8,7 +10,10 @@ namespace Seventh.Resource.Common.Helpers
     {
         public static string ToHashName(string fileName)
         {
-            throw new NotImplementedException();
+            using var sha1 = SHA1.Create();
+            var hashBytes = sha1.ComputeHash(Encoding.UTF8.GetBytes(fileName));
+            return BitConverter.ToString(hashBytes, 0, hashBytes.Length)
+                .Replace("-", string.Empty, StringComparison.Ordinal);
         }
 
         public static string ToWithHashName(string fileName)

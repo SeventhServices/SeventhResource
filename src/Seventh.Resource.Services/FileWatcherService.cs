@@ -14,7 +14,7 @@ namespace Seventh.Resource.Services
         private readonly FileSystemWatcher _revWatcher = new FileSystemWatcher();
         private readonly PathOption _pathOption;
 
-        public FileWatcherService(OptionService optionService, ILoggerFactory loggerFactory)
+        public FileWatcherService(ResourceLocation optionService, ILoggerFactory loggerFactory)
         {
             _pathOption = optionService.PathOption;
             _logger = loggerFactory.CreateLogger<FileWatcherService>();
@@ -38,7 +38,7 @@ namespace Seventh.Resource.Services
             // (Copying file task after download file is using it now.)
             await Task.Delay(500);
 
-            await AssetCryptHelper.DecryptWithRename(e.FullPath,
+            await AssetCryptHelper.DecryptWithRenameAsync(e.FullPath,
                 _pathOption.AssetPath.SortedAssetPath
                     .AppendAndCreatePath("Card", "l"));
 

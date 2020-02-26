@@ -21,7 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		build\version.props = build\version.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seventh.Resource.Api", "src\Seventh.Resource.Api\Seventh.Resource.Api.csproj", "{10F13DAB-BFB0-474D-ABEF-7CCED8CF4A8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Seventh.Resource.Api", "src\Seventh.Resource.Api\Seventh.Resource.Api.csproj", "{10F13DAB-BFB0-474D-ABEF-7CCED8CF4A8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seventh.Core", "src\Seventh.Core\Seventh.Core.csproj", "{237CE80C-DF11-44F8-8A31-F17F35B82177}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{10F13DAB-BFB0-474D-ABEF-7CCED8CF4A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10F13DAB-BFB0-474D-ABEF-7CCED8CF4A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10F13DAB-BFB0-474D-ABEF-7CCED8CF4A8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{237CE80C-DF11-44F8-8A31-F17F35B82177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{237CE80C-DF11-44F8-8A31-F17F35B82177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{237CE80C-DF11-44F8-8A31-F17F35B82177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{237CE80C-DF11-44F8-8A31-F17F35B82177}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{005F61DE-B490-4AEE-BDF4-87DEAC119F72} = {F8987548-22AF-4A04-B946-7D54A0B42617}
 		{6A0D78A8-892F-485A-AC0F-04D1A1F29D53} = {AB603062-CBDC-4664-B46F-CD8EFAA6DD1B}
 		{10F13DAB-BFB0-474D-ABEF-7CCED8CF4A8F} = {F8987548-22AF-4A04-B946-7D54A0B42617}
+		{237CE80C-DF11-44F8-8A31-F17F35B82177} = {F8987548-22AF-4A04-B946-7D54A0B42617}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D04C870-5D64-451F-81EE-1DC6FA2731A0}

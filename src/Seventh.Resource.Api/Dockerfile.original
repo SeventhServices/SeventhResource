@@ -7,14 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["src/Seventh.Resource.Api/Seventh.Resource.Api.csproj", "src/Seventh.Resource.Api/"]
-COPY ["src/Seventh.Resource/Seventh.Resource.csproj", "src/Seventh.Resource/"]
-COPY ["src/Seventh.Resource.Services/Seventh.Resource.Services.csproj", "src/Seventh.Resource.Services/"]
-COPY ["src/Seventh.Resource.Common/Seventh.Resource.Common.csproj", "src/Seventh.Resource.Common/"]
-COPY ["src/Seventh.Core/Seventh.Core.csproj", "src/Seventh.Core/"]
-RUN dotnet restore "src/Seventh.Resource.Api/Seventh.Resource.Api.csproj"
+COPY ["Seventh.Resource.Api/Seventh.Resource.Api.csproj", "Seventh.Resource.Api/"]
+RUN dotnet restore "Seventh.Resource.Api/Seventh.Resource.Api.csproj"
 COPY . .
-WORKDIR "/src/src/Seventh.Resource.Api"
+WORKDIR "/src/Seventh.Resource.Api"
 RUN dotnet build "Seventh.Resource.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish

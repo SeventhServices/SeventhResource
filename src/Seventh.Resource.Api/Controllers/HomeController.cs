@@ -8,15 +8,8 @@ namespace Seventh.Resource.Api.Controllers
     [Route("")]
     public class HomeController : ControllerBase
     {
-        private readonly FileWatcherService _watcher;
-
-        public HomeController(FileWatcherService watcher)
-        {
-            _watcher = watcher;
-        }
         public IActionResult Index()
         {
-            _watcher.StartWatch();
             return new JsonResult(new
             {
                 Message = "Welcome to 7th(seventh) resource api."

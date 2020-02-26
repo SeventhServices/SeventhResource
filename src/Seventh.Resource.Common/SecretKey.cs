@@ -10,6 +10,7 @@ namespace Seventh.Resource.Common
         }
 
         public static SecretKey Implement { get; }
+
         public string SaveDataServices { get; }
             = SecretKeyCrypt.Decrypt("14f8d9ac10e72a75b3631de9dd91daadfb9205247b8c8e1184ea4934a5cb045e");
         public string DefaultId { get; }
