@@ -7,15 +7,14 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package">
-    <Product>Rabbit Extensions</Product>
+    <Product>SeventhServices</Product>
     <RepositoryUrl>https://github.com/SeventhServices/SeventhResource</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Product>SeventhServices</Product>
     <Company>Sagilio</Company>
     <Authors>Sagilio</Authors>
     <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
 
-    <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/SeventhServices/SeventhResource</PackageProjectUrl>
 
   </PropertyGroup>
