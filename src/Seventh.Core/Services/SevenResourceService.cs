@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Seventh.Core
+namespace Seventh.Core.Services
 {
     public class SevenResourceService
     {

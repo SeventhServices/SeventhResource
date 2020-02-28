@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Seventh.Core;
+using Seventh.Core.Services;
 using Seventh.Resource.Common.Classes.Options;
 using Seventh.Resource.Services;
 

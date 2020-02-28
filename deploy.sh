@@ -32,7 +32,8 @@
 			fi
 		echo "removed container : $containers_stop"
 	fi
-	   
+	
+	echo "start pull image : $2"
 	docker pull $2 >> /dev/null 2>&1
 	rc=$?
 	if [[ $rc != 0 ]]; then

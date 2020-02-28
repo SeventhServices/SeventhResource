@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Seventh.Core;
+using Seventh.Core.Services;
 using Seventh.Resource.Api.Dto;
 using Seventh.Resource.Services;
 
@@ -14,16 +15,14 @@ namespace Seventh.Resource.Api.Controllers
     {
         private readonly SevenStatusService _statusService;
         private readonly ResourceLocation _location;
-        private readonly HttpClient _httpClient;
 
         public ConfigController(SevenStatusService statusService,ResourceLocation location, IHttpClientFactory httpClientFactory)
         {
             _statusService = statusService;
             _location = location;
-            _httpClient = httpClientFactory.CreateClient();
         }
 
-        [HttpPost("{DownloadUrl}")]
+        [HttpPut("{DownloadUrl}")]
         public IActionResult UpdateDownloadUrl([FromBody] UpdateDownloadUrlDto dto)
         {
             _location.DownloadUrl = dto.DownloadUrl;
@@ -34,11 +33,17 @@ namespace Seventh.Resource.Api.Controllers
             });
         }
 
-        [HttpPut("{DownloadUrl}")]
+        [HttpPost("{DownloadUrl}")]
         public async Task<IActionResult> RefreshDownloadUrl()
         {
-            var info = 
-                await _httpClient.GetStringAsync(_statusService.GetVersionInfoUrl());
+            var info = await _statusService.TryGetVersionInfoAsync();
+
+            if (info == null)
+            {
+                return NotFound();
+            }
+
+            _location.DownloadUrl = info.AssetVersion.DownloadUrl;
 
             return Ok(new
             {

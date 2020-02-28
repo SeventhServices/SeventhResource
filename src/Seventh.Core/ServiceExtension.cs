@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Seventh.Core.Services;
 
 namespace Seventh.Core
 {
@@ -8,9 +10,10 @@ namespace Seventh.Core
     {
         public static void AddSeventhCore(this IServiceCollection services)
         {
-            services.AddSingleton<SeventhServiceLocation>();
-            services.AddSingleton<SevenResourceService>();
-            services.AddSingleton<SevenStatusService>();
+            services.AddHttpClient();
+            services.TryAddSingleton<SeventhServiceLocation>();
+            services.TryAddScoped<SevenResourceService>();
+            services.TryAddScoped<SevenStatusService>();
         }
     }
 }

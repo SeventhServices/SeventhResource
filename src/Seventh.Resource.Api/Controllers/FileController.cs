@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Seventh.Core;
+using Seventh.Core.Services;
 using Seventh.Resource.Api.Dto;
 using Seventh.Resource.Common.Helpers;
 using Seventh.Resource.Services;
@@ -63,7 +64,5 @@ namespace Seventh.Resource.Api.Controllers
                 sortedUrl = _resourceService.GetDownloadUrl(sortedSavePath.Replace(_option.PathOption.RootPath, string.Empty))
             });
         }
-
-
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-
-namespace Seventh.Core
+﻿namespace Seventh.Core.Services
 {
     public class SeventhServiceLocation
     {

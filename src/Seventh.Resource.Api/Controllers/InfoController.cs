@@ -9,7 +9,7 @@ namespace Seventh.Resource.Api.Controllers
     {
 
         [HttpGet("File/{FileName}")]
-        public IActionResult GetFileName(string fileName)
+        public IActionResult GetFileInfo(string fileName)
         {
             return Ok(new
             {

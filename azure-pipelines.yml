@@ -3,61 +3,118 @@ trigger:
 - master
 - develop
 
-pool:
-  vmImage: 'ubuntu-latest'
+resources:
+- repo: self
 
 variables:
   buildConfiguration: 'Release'
+  tag: '$(Build.BuildId)'
+  imageName: '$(DcokerHubUserId)/seventh-resource-api'
+  containerName: 'seventh-resource-api'
   Major: '0'
   Minor: '1'
   Patch: '0'
 
-steps:
-- task : UseDotNet@2
-  inputs:
-    packageType: 'sdk'
-    version: '3.1.100'
+stages:
+- stage: BuildAndPack
+  displayName: Build and push packs
+  jobs:  
+  - job: Build
+    displayName: Build and push packs
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - task : UseDotNet@2
+        displayName: Use dotnet-sdk-3.1.100
+        inputs:
+            packageType: 'sdk'
+            version: '3.1.100'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    arguments: '-c $(buildConfiguration)'
+      - task: DotNetCoreCLI@2
+        displayName: Build projects
+        inputs:
+            command: 'build'
+            arguments: '-c $(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'test'
+      - task: DotNetCoreCLI@2
+        displayName: Test projects
+        inputs:
+            command: 'test'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'pack'
-    configuration: $(buildConfiguration)
-    packagesToPack: '**/*.csproj'
-    nobuild: true
-    versioningScheme: 'byPrereleaseNumber'
-    majorVersion: $(Major)
-    minorVersion: $(Minor)
-    patchVersion: $(Patch)
+      - task: DotNetCoreCLI@2
+        displayName: Pack packages
+        inputs:
+            command: 'pack'
+            configuration: $(buildConfiguration)
+            packagesToPack: '**/*.csproj'
+            nobuild: true
+            versioningScheme: 'byPrereleaseNumber'
+            majorVersion: $(Major)
+            minorVersion: $(Minor)
+            patchVersion: $(Patch)
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: 'dee0f159-5b38-44f4-b582-516f041bec05'
+      - task: DotNetCoreCLI@2
+        displayName: Push packages to artifact
+        inputs:
+            command: 'push'
+            packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+            nuGetFeedType: 'internal'
+            publishVstsFeed: 'dee0f159-5b38-44f4-b582-516f041bec05'
 
-- task: NuGetCommand@2
-  inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    nuGetFeedType: 'external'
-    publishFeedCredentials: 'MyGet Push'
+      - task: NuGetCommand@2
+        displayName: Push packages to myget
+        inputs:
+            command: 'push'
+            packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+            nuGetFeedType: 'external'
+            publishFeedCredentials: 'MyGet Push'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop-azure-ci'
-    publishLocation: 'Container'
+      - task: PublishBuildArtifacts@1
+        displayName: Push packages to drop
+        inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+            ArtifactName: 'drop-azure-ci'
+            publishLocation: 'Container'
 
+- stage: Build
+  displayName: Build image
+  jobs:  
+  - job: Build
+    displayName: Build and push image
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
 
+    - task: Docker@2
+      displayName: Login dockerHub
+      inputs:
+        containerRegistry: 'PrivateDockerHub'
+        command: 'login'
 
+    - task: Docker@2
+      displayName: Build and push image
+      inputs:
+        containerRegistry: 'PrivateDockerHub'
+        command: 'buildAndPush'
+        repository: '$(imageName)'
+        dockerfile: '$(Build.SourcesDirectory)/src/Seventh.Status.Api/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)'
+        tags: |
+          $(tag)
+          latest
 
+- stage: Deply
+  displayName: Deply
+  jobs:  
+    - job: Deploy
+      displayName: Deploy on dcoker
+      pool:
+        vmImage: 'ubuntu-latest'
+      steps:
+        - task: SSH@0
+          displayName: Run deploy.sh
+          inputs:
+            sshEndpoint: 'Aliyun2SSH'
+            runOptions: 'script'
+            scriptPath: '$(Build.SourcesDirectory)/deploy.sh'
+            args: '$(containerName) $(imageName)'
