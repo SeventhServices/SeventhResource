@@ -97,7 +97,7 @@ stages:
         containerRegistry: 'PrivateDockerHub'
         command: 'buildAndPush'
         repository: '$(imageName)'
-        dockerfile: '$(Build.SourcesDirectory)/src/Seventh.Status.Api/Dockerfile'
+        dockerfile: '$(Build.SourcesDirectory)/src/Seventh.Resource.Api/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)'
         tags: |
           $(tag)
