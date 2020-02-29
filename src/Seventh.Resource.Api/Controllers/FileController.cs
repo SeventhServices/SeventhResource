@@ -1,54 +1,86 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using Seventh.Core;
+using Seventh.Core.Dto.Request.Resource;
+using Seventh.Core.Dto.Response.Resource;
 using Seventh.Core.Services;
-using Seventh.Resource.Api.Dto;
-using Seventh.Resource.Common.Helpers;
+using Seventh.Resource.Common.Entities;
 using Seventh.Resource.Services;
 
 namespace Seventh.Resource.Api.Controllers
 {
     [ApiController]
-    [Route("{Controller}")]
+    [Route("[controller]")]
     public class FileController : Controller
     {
-        private readonly ResourceLocation _option;
         private readonly SevenResourceService _resourceService;
         private readonly AssetDownloadService _downloadService;
 
-        public FileController(ResourceLocation option,SevenResourceService resourceService, AssetDownloadService downloadService)
+        public FileController(SevenResourceService resourceService, AssetDownloadService downloadService)
         {
-            _option = option;
             _resourceService = resourceService;
             _downloadService = downloadService;
         }
 
-        [HttpGet("Option")]
-        public IActionResult Index()
+        [HttpPost("Download")]
+        [ResponseCache( Duration = 1800 )]
+        public async Task<IActionResult> TryDownloadFiles(IEnumerable<TryDownloadFileDto> dtoList)
         {
-            return Ok(_option);
+            var downloadFiles = new List<DownloadFileDto>();
+            foreach (var dto in dtoList)
+            {
+                bool result; AssetFileInfo info;
+                if (dto.Revision != null)
+                {
+                    (result, info) =
+                        await _downloadService.TryDownloadAtRevisionAndSortAsync(
+                            dto.FileName, (int)dto.Revision,dto.NeedHash == true);
+                }
+                else
+                {
+                    (result, info) =
+                        await _downloadService.TryDownloadAtMirrorAndSortAsync(
+                            dto.FileName, dto.NeedHash == true);
+                }
+
+                if (!result)
+                {
+                    downloadFiles.Add(new DownloadFileDto
+                    {
+                        Result = false,
+                        FileName = dto.FileName,
+                    });
+                }
+
+                var downloadFileDto = 
+                    info.BuildAdapter()
+                        .AddParameters("baseUrl",_resourceService.BaseUrl)
+                        .AdaptToType<DownloadFileDto>();
+                downloadFileDto.Result = true;
+                downloadFiles.Add(downloadFileDto);
+            }
+            return Ok(downloadFiles);
         }
 
-        [HttpGet("{FileName}")]
-        public async Task<IActionResult> GetOrDownloadFile(
+        [HttpGet("Download/{FileName}")]
+        [ResponseCache( Duration = 120 )]
+        public async Task<IActionResult> TryGetDownloadFile(
             [RegularExpression("^.*\\..*$")] [Required] string fileName,
-            [FromQuery] GetOrDownloadFileDto dto)
+            [FromQuery] TryGetDownloadFileDto dto)
         {
-            bool result; string savePath; string sortedSavePath;
+            bool result; AssetFileInfo info;
 
             if (dto.Revision != null)
             {
-                (result, savePath, sortedSavePath) =
+                (result, info) =
                     await _downloadService.TryDownloadAtRevisionAndSortAsync(
                         fileName, (int)dto.Revision,dto.NeedHash == true);
             }
             else
             {
-                (result, savePath, sortedSavePath) =
+                (result, info) =
                     await _downloadService.TryDownloadAtMirrorAndSortAsync(
                         fileName, dto.NeedHash == true);
             }
@@ -58,11 +90,13 @@ namespace Seventh.Resource.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(new
-            {
-                mirrorUrl = _resourceService.GetDownloadUrl(savePath.Replace(_option.PathOption.RootPath, string.Empty)),
-                sortedUrl = _resourceService.GetDownloadUrl(sortedSavePath.Replace(_option.PathOption.RootPath, string.Empty))
-            });
+            var downloadFileDto = 
+                info.BuildAdapter()
+                    .AddParameters("baseUrl",_resourceService.BaseUrl)
+                    .AdaptToType<DownloadFileDto>();
+
+            downloadFileDto.Result = true;
+            return Ok(downloadFileDto);
         }
     }
 }

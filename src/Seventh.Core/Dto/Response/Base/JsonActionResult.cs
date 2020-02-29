@@ -1,4 +1,4 @@
-﻿namespace Seventh.Core.Dto.Base
+﻿namespace Seventh.Core.Dto.Response.Base
 {
     public class JsonActionResult
     {

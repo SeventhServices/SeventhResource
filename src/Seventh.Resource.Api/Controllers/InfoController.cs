@@ -4,10 +4,9 @@ using Seventh.Resource.Common.Helpers;
 namespace Seventh.Resource.Api.Controllers
 {
     [ApiController]
-    [Route("{Controller}")]
+    [Route("[controller]")]
     public class InfoController : ControllerBase
     {
-
         [HttpGet("File/{FileName}")]
         public IActionResult GetFileInfo(string fileName)
         {

@@ -1,6 +1,6 @@
-﻿namespace Seventh.Core.Dto.Resource
+﻿namespace Seventh.Core.Dto.Request.Resource
 {
-    public class GetOrDownloadFileDto
+    public class TryGetDownloadFileDto
     {
         public bool? NeedHash { get; set; }
 

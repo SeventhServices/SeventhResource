@@ -1,4 +1,4 @@
-﻿namespace Seventh.Core.Dto.Status
+﻿namespace Seventh.Core.Dto.Response.Status
 {
     public class VersionInfoDto
     {

@@ -1,25 +1,21 @@
-﻿using Seventh.Core.Dto.Status;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Seventh.Core.Dto.Response.Status;
+using Seventh.Core.Extend;
 
 namespace Seventh.Core.Services
 {
     public class SevenStatusService
     {
         private readonly SeventhServiceLocation _location;
-        private readonly HttpClient _client;
-        private readonly JsonSerializerOptions _jsonOptions;
+        private readonly IJsonHttpExtend _httpExtend;
 
         public SevenStatusService(SeventhServiceLocation location,
-            IHttpClientFactory clientFactory)
+            IJsonHttpExtend httpExtend)
         {
             _location = location;
-            _client = clientFactory.CreateClient();
-            _jsonOptions = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            };
+            _httpExtend = httpExtend;
         }
 
         public string GetVersionInfoUrl()
@@ -29,13 +25,7 @@ namespace Seventh.Core.Services
 
         public async Task<VersionInfoDto> TryGetVersionInfoAsync()
         {
-            var response = await _client.GetAsync(GetVersionInfoUrl());
-            if (!response.IsSuccessStatusCode)
-            {
-                return null;
-            }
-            var json =  await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<VersionInfoDto>(json,_jsonOptions);
+            return await _httpExtend.TryJsonGetAsync<VersionInfoDto>(GetVersionInfoUrl());
         }
     }
 }

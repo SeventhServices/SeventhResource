@@ -2,9 +2,9 @@
 using System.IO;
 using System.Reflection;
 using Seventh.Resource.Common;
-using Seventh.Resource.Common.Classes;
-using Seventh.Resource.Common.Classes.Options;
-using PathOption = Seventh.Resource.Common.Classes.Options.PathOption;
+using Seventh.Resource.Common.Entities;
+using Seventh.Resource.Common.Options;
+using PathOption = Seventh.Resource.Common.Options.PathOption;
 
 namespace Seventh.Resource.Services
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using Seventh.Resource.Common.Classes;
+using Seventh.Resource.Common.Entities;
 using Seventh.Resource.Common.Helpers;
 using Xunit;
 

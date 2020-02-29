@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
-using Seventh.Resource.Common.Classes.Options;
+using Seventh.Resource.Common.Options;
 using Seventh.Resource.Common.Utilities;
-using PathOption = Seventh.Resource.Common.Classes.Options.PathOption;
+using PathOption = Seventh.Resource.Common.Options.PathOption;
 
 
 namespace Seventh.Resource.Services
@@ -11,7 +11,6 @@ namespace Seventh.Resource.Services
         public AssetSortOption SortOption { get; set; }
         public PathOption PathOption { get; set; }
         public string DownloadUrl { get; set; }
-            = "https://d2kvktrbzlzxwg.cloudfront.net/revision/raw396_19dab4ea40d66c2545654a6f346d722f/";
 
         public ResourceLocation SetOptions(ResourceOption options)
         {

@@ -1,21 +1,16 @@
 ﻿using System.IO;
 
-namespace Seventh.Resource.Common.Classes.Options
+namespace Seventh.Resource.Common.Options
 {
     public class PathOption
     {
         public string RootPath { get; set; }
         public AssetPath AssetPath { get; set; }
         public IndexPath IndexPath { get; set; }
-        public ConfigurePath ConfigurePath { get; set; }
 
         public PathOption(string rootPath)
         {
             RootPath = rootPath;
-            //ConfigurePath = new ConfigurePath
-            //{
-            //    RootPath = ConfigureWatcher.SavePath
-            //};
             IndexPath = new IndexPath
             {
                 RootPath = Path.Combine(RootPath, "Index")
@@ -48,11 +43,6 @@ namespace Seventh.Resource.Common.Classes.Options
     }
 
     public class IndexPath
-    {
-        public string RootPath { get; set; }
-    }
-
-    public class ConfigurePath
     {
         public string RootPath { get; set; }
     }

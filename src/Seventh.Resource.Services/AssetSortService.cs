@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Seventh.Resource.Common.Classes.Options;
 using Seventh.Resource.Common.Extensions;
 
 namespace Seventh.Resource.Services

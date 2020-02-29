@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Seventh.Resource.Common.Classes.Options;
 using Seventh.Resource.Common.Extensions;
 using Seventh.Resource.Common.Helpers;
+using Seventh.Resource.Common.Options;
 
 namespace Seventh.Resource.Services
 {

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Seventh.Core;
 using Seventh.Core.Services;
-using Seventh.Resource.Common.Classes.Options;
+using Seventh.Resource.Common.Options;
 using Seventh.Resource.Services;
 
 namespace Seventh.Resource
@@ -18,10 +18,6 @@ namespace Seventh.Resource
             services.AddScoped<AssetDownloadService>();
             services.AddHttpClient<AssetDownloadClient>();
             services.AddSingleton<AssetSortService>();
-
-            services.AddSingleton<SeventhServiceLocation>();
-            services.AddSingleton<SevenResourceService>();
-            services.AddSingleton<SevenStatusService>();
         }
 
         public static void AddSeventhResourceServices(this IServiceCollection services, Action<ResourceOption> resourceOptionAction)
@@ -35,10 +31,6 @@ namespace Seventh.Resource
             services.AddScoped<AssetDownloadService>();
             services.AddHttpClient<AssetDownloadClient>();
             services.AddSingleton<AssetSortService>();
-
-            services.AddSingleton<SeventhServiceLocation>();
-            services.AddSingleton<SevenResourceService>();
-            services.AddSingleton<SevenStatusService>();
         }
     }
 }

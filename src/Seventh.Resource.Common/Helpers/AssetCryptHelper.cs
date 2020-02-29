@@ -79,8 +79,7 @@ namespace Seventh.Resource.Common.Helpers
                 return false;
             }
 
-            var fileType = filePath.Split('.');
-            var type = fileType[^2];
+            var type = Path.GetExtension(filePath);
 
             return Equals(type, "txt") ||
                    Equals(type, "sql") ||

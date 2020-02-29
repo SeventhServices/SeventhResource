@@ -1,16 +1,14 @@
-﻿using System.Collections;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Seventh.Core;
+using Seventh.Core.Dto.Request.Resource;
 using Seventh.Core.Services;
-using Seventh.Resource.Api.Dto;
 using Seventh.Resource.Services;
 
 namespace Seventh.Resource.Api.Controllers
 {
     [ApiController]
-    [Route("{Controller}")]
+    [Route("[controller]")]
     public class ConfigController : ControllerBase
     {
         private readonly SevenStatusService _statusService;

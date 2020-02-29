@@ -1,20 +1,41 @@
-﻿using System;
+﻿using Seventh.Core.Dto.Response.Resource;
+using Seventh.Core.Dto.Response.Status;
+using System;
+using System.Net.Http;
+using System.Reflection;
+using Seventh.Core.Abstractions.Extend;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Seventh.Core.Extend;
+using Seventh.Core.Dto.Request.Resource;
 
 namespace Seventh.Core.Services
 {
     public class SevenResourceService
     {
-        private readonly SeventhServiceLocation _location;
+        private readonly IJsonHttpExtend _httpExtend;
+        public string BaseUrl { get; }
 
-        public SevenResourceService(SeventhServiceLocation location)
+        public SevenResourceService(SeventhServiceLocation location,
+            IJsonHttpExtend httpExtend)
         {
-            _location = location;
+            _httpExtend = httpExtend;
+            BaseUrl = location.ResourceServiceUrl;
         }
 
-        public string GetDownloadUrl(string filePath)
+        public async Task<DownloadFileDto> TryDownloadNewFileAsync(string fileName,int revision, bool needHash = false)
         {
-            var directories = filePath.Split(new []{"\\","/"},StringSplitOptions.RemoveEmptyEntries);
-            return $"{_location.ResourceServiceUrl}{string.Join("/", directories)}";
+            var queries = new []
+            {
+                new KeyValuePair<string, string>(nameof(revision),revision.ToString()),
+                new KeyValuePair<string, string>(nameof(needHash),needHash.ToString()),
+            }; 
+            return await _httpExtend.TryJsonGetAsync<DownloadFileDto>(string.Concat(BaseUrl,"file/download/",fileName),queries);
+        }
+
+        public async Task<IEnumerable<DownloadFileDto>> TryDownloadNewFilesAsync(IEnumerable<TryDownloadFileDto> dtoList)
+        {
+            return await _httpExtend.TryJsonPostAsync<IEnumerable<TryDownloadFileDto>,IEnumerable<DownloadFileDto>>(string.Concat(BaseUrl,"file/download/"),dtoList);
         }
     }
 }

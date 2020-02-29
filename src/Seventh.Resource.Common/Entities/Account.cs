@@ -1,22 +1,16 @@
 ﻿using System;
 using Seventh.Resource.Common.Crypts;
 
-namespace Seventh.Resource.Common.Classes
+namespace Seventh.Resource.Common.Entities
 {
     public class Account
     {
         public string Pid { get; }
-
         public string Uuid { get;}
-
         public string EncPid { get; }
-
         public string Id { get; }
-
         public string Tpid { get;}
-
         public string Ivs { get;}
-
         public string EncUuid { get; }
 
         public Account()

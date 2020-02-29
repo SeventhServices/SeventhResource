@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using Seventh.Resource.Common.Classes;
+using Seventh.Resource.Common.Entities;
 using Seventh.Resource.Common.Enums;
 using Seventh.Resource.Common.Files;
 
