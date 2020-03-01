@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Seventh.Core\Seventh.Core.csproj" />
     <ProjectReference Include="..\Seventh.Resource.Services\Seventh.Resource.Services.csproj" />
   </ItemGroup>
 

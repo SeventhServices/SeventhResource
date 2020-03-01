@@ -13,6 +13,7 @@ using Seventh.Core.Dto.Response.Resource;
 using System.Security.Policy;
 using Seventh.Core.Extend;
 using Seventh.Core.Utilities;
+using Seventh.Core;
 
 namespace Seventh.Resource.Api
 {
@@ -30,6 +31,7 @@ namespace Seventh.Resource.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSeventhCore();
             services.AddSeventhResourceServices(option =>
             {
                 option.PathOption = new PathOption(_environment.WebRootPath);

@@ -26,7 +26,7 @@ namespace Seventh.Resource.Api.Controllers
 
         [HttpPost("Download")]
         [ResponseCache( Duration = 1800 )]
-        public async Task<IActionResult> TryDownloadFiles(IEnumerable<TryDownloadFileDto> dtoList)
+        public async Task<ActionResult<IEnumerable<DownloadFileDto>>> TryDownloadFiles(IEnumerable<TryDownloadFileDto> dtoList)
         {
             var downloadFiles = new List<DownloadFileDto>();
             foreach (var dto in dtoList)
@@ -52,6 +52,7 @@ namespace Seventh.Resource.Api.Controllers
                         Result = false,
                         FileName = dto.FileName,
                     });
+                    continue;
                 }
 
                 var downloadFileDto = 
@@ -66,7 +67,7 @@ namespace Seventh.Resource.Api.Controllers
 
         [HttpGet("Download/{FileName}")]
         [ResponseCache( Duration = 120 )]
-        public async Task<IActionResult> TryGetDownloadFile(
+        public async Task<ActionResult<DownloadFileDto>> TryGetDownloadFile(
             [RegularExpression("^.*\\..*$")] [Required] string fileName,
             [FromQuery] TryGetDownloadFileDto dto)
         {

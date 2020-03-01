@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Seventh.Core\Seventh.Core.csproj" />
     <ProjectReference Include="..\Seventh.Resource\Seventh.Resource.csproj" />
   </ItemGroup>
 

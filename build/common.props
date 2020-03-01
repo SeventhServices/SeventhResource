@@ -14,7 +14,7 @@
     <Authors>Sagilio</Authors>
     <!--<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
 
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/SeventhServices/SeventhResource</PackageProjectUrl>
 
   </PropertyGroup>
