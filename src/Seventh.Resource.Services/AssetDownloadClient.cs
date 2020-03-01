@@ -10,6 +10,7 @@ namespace Seventh.Resource.Services
         public AssetDownloadClient(HttpClient httpClient, ResourceLocation option)
         {
             httpClient.BaseAddress = new Uri(option.DownloadUrl);
+            httpClient.Timeout = TimeSpan.FromMinutes(5);
             Client = httpClient;
         }
     }

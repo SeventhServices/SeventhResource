@@ -144,7 +144,7 @@ namespace Seventh.Resource.Common.Crypts
 
         public static string ConvertFileName(string filePath, EncVersion versionFrom, EncVersion versionTo)
         {
-            if (versionFrom == versionTo) return null;
+            if (versionFrom == versionTo) return filePath;
 
             if (versionFrom == EncVersion.Ver1)
             {
@@ -156,7 +156,9 @@ namespace Seventh.Resource.Common.Crypts
                 var fileHash = BitConverter.ToString(hashBytes, 0, hashBytes.Length)
                     .Replace("-", string.Empty, StringComparison.Ordinal);
 
-                return $"{fileNameWithoutExtension}_{fileHash}{fileExtension}.enc";
+                return versionTo == EncVersion.NoEnc 
+                        ? string.Concat(fileNameWithoutExtension,"_",fileHash,fileExtension)
+                        : string.Concat(fileNameWithoutExtension,"_",fileHash,fileExtension,".enc");
             }
             else
             {
@@ -168,7 +170,9 @@ namespace Seventh.Resource.Common.Crypts
                 var exportFileName = string.Join("_",
                     tempFileName.Take(tempFileName.Length - 1));
 
-                return exportFileName + fileExtension + ".enc";
+                return versionTo == EncVersion.NoEnc 
+                    ? string.Concat(exportFileName,fileExtension)
+                    : string.Concat(exportFileName,fileExtension,".enc");
             }
         }
 

@@ -8,7 +8,7 @@ namespace Seventh.Core.Dto.Request.Resource
         [RegularExpression("^.*\\..*$")]
         public string FileName { get; set; }
 
-        public bool? NeedHash { get; set; }
+        public bool NeedHash { get; set; }
 
         public int? Revision { get; set; }
     }

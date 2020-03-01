@@ -62,14 +62,7 @@ namespace Seventh.Resource.Common.Helpers
 
         public static string Rename(string filePath, AssetCrypt.EncVersion encVersion)
         {
-            var newFileName =
-                encVersion == AssetCrypt.EncVersion.Ver2
-                    ? AssetCrypt.ConvertFileName(filePath,
-                        AssetCrypt.EncVersion.Ver2,
-                        AssetCrypt.EncVersion.Ver1)
-                    : filePath;
-
-            return newFileName.Remove(newFileName.Length - 4);
+            return AssetCrypt.ConvertFileName(filePath,encVersion,AssetCrypt.EncVersion.NoEnc);
         }
 
         public static bool IdentifyShouldLz4(string filePath)

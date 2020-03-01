@@ -1,6 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Seventh.Resource.Common.Crypts;
 using Seventh.Resource.Common.Entities;
 using Seventh.Resource.Common.Extensions;
@@ -15,12 +19,11 @@ namespace Seventh.Resource.Services
         private readonly HttpClient _client;
         private readonly PathOption _pathOption;
 
-        public AssetDownloadService(AssetDownloadClient client, AssetSortService sortService, ResourceLocation option)
+        public AssetDownloadService(AssetDownloadClient client, AssetSortService sortService, ResourceLocation location)
         {
             _sortService = sortService;
             _client = client.Client;
-
-            _pathOption = option.PathOption;
+            _pathOption = location.PathOption;
         }
 
         public async Task<(bool result, AssetFileInfo info)>
@@ -110,6 +113,83 @@ namespace Seventh.Resource.Services
                     .Replace(_pathOption.RootPath,string.Empty));
         }
 
+        public async Task<(bool result, long? Length)> 
+            TryGetContentLengthAsync(string fileName)
+        {
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(fileName, UriKind.RelativeOrAbsolute) ,
+                Method = HttpMethod.Head
+            };
+
+            var response = await _client.SendAsync(request,HttpCompletionOption.ResponseHeadersRead)
+                .ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return (false, 0);
+            }
+
+            return (true, response.Content.Headers.ContentLength);
+        }
+
+        public async Task<AssetFileInfo> 
+            DryGetAssetFileInfoAsync(string fileName, 
+                int? revision = 0, bool needHash = false)
+        {
+            if (needHash)
+            {
+                fileName = FileNameConverter.ToWithHashName(fileName);
+            }
+
+            var isGameMirror = !revision.HasValue;
+            long fileSize = 0; long realFileSize = 0;
+
+            var savePath = isGameMirror 
+                ? _pathOption.AssetPath.GameMirrorAssetPath.AppendPath(fileName)
+                : _pathOption.AssetPath.RevMirrorAssetPath.AppendPath(revision.Value.ToString(),fileName);
+
+            if (File.Exists(savePath))
+            {
+                fileSize = new FileInfo(savePath).Length;
+            }
+
+            var encVersion = AssetCrypt.IdentifyEncVersion(fileName);
+            var encFileName = fileName;
+            fileName = AssetCryptHelper.Rename(fileName, encVersion);
+            var sortedSavePath = await _sortService.SortAsync(fileName);
+
+            if (File.Exists(sortedSavePath))
+            {
+                realFileSize = new FileInfo(sortedSavePath).Length;
+            }
+
+            return new AssetFileInfo
+            {
+                FileName = encFileName,
+                RealFileName = fileName,
+                Revision = isGameMirror ? 0 : revision.Value,
+                FileSize = fileSize,
+                RealFileSize = realFileSize,
+                MirrorSavePath = savePath.Replace(_pathOption.RootPath, string.Empty),
+                SortedSavePath = sortedSavePath.Replace(_pathOption.RootPath, string.Empty)
+            };
+        }
+
+        public async Task<(bool result ,bool pass)> TryUsePolicyAsync(string fileName, bool needHash, long maxLength, bool whenLengthNull = true)
+        {
+            if (needHash)
+            {
+                fileName = FileNameConverter.ToWithHashName(fileName);
+            }
+
+            var (result, length) = await TryGetContentLengthAsync(fileName);
+
+            if (!result) return (false, false);
+
+            return length == null ? (true, false) : (true,!(length > maxLength));
+        }
+
         private async Task<string> SaveFile(string fileName, string savePath, HttpResponseMessage response)
         {
             var tempSavePath = _pathOption.AssetPath.DownloadTempRootPath.AppendPath(fileName);
@@ -170,6 +250,8 @@ namespace Seventh.Resource.Services
                 SortedSavePath = sortedSavePath
             };
         }
+
+
 
         //public async Task DownloadCard(int cardId, FileSizeVersion sizeVersion = FileSizeVersion.Large)
         //{
