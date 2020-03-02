@@ -13,20 +13,20 @@ namespace Seventh.Resource.Common.Options
             RootPath = rootPath;
             IndexPath = new IndexPath
             {
-                RootPath = Path.Combine(RootPath, "Index")
+                RootPath = Path.Combine(RootPath, "index")
             };
             AssetPath = new AssetPath
             {
-                RootPath = Path.Combine(RootPath, "Asset"),
-                DownloadTempRootPath = Path.Combine(RootPath, "Temp"),
+                RootPath = Path.Combine(RootPath, "asset"),
+                TempRootPath = Path.Combine(RootPath, "temp"),
             };
-            AssetPath.SortedAssetPath = Path.Combine(AssetPath.RootPath, "Sorted");
-            AssetPath.MirrorAssetRootPath = Path.Combine(AssetPath.RootPath, "Mirror");
-            AssetPath.RevMirrorAssetPath = Path.Combine(AssetPath.MirrorAssetRootPath, "Revs");
-            AssetPath.GameMirrorAssetPath = Path.Combine(AssetPath.MirrorAssetRootPath, "Game");
-            AssetPath.ApkDownloadTempPath = Path.Combine(AssetPath.DownloadTempRootPath, "Apk");
-            AssetPath.AssetDownloadTempPath = Path.Combine(AssetPath.DownloadTempRootPath, "Asset");
-            AssetPath.IndexDownloadTempPath = Path.Combine(AssetPath.DownloadTempRootPath, "Index");
+            AssetPath.SortedAssetPath = Path.Combine(AssetPath.RootPath, "sorted");
+            AssetPath.MirrorAssetRootPath = Path.Combine(AssetPath.RootPath, "mirror");
+            AssetPath.RevMirrorAssetPath = Path.Combine(AssetPath.MirrorAssetRootPath, "revisons");
+            AssetPath.GameMirrorAssetPath = Path.Combine(AssetPath.MirrorAssetRootPath, "game");
+            AssetPath.ApkTempPath = Path.Combine(AssetPath.TempRootPath, "apk");
+            AssetPath.AssetTempPath = Path.Combine(AssetPath.TempRootPath, "aseet");
+            AssetPath.IndexTempPath = Path.Combine(AssetPath.TempRootPath, "index");
         }
     }
     public class AssetPath
@@ -36,10 +36,10 @@ namespace Seventh.Resource.Common.Options
         public string MirrorAssetRootPath { get; set; }
         public string RevMirrorAssetPath { get; set; }
         public string GameMirrorAssetPath { get; set; }
-        public string DownloadTempRootPath { get; set; }
-        public string ApkDownloadTempPath { get; set; }
-        public string AssetDownloadTempPath { get; set; }
-        public string IndexDownloadTempPath { get; set; }
+        public string TempRootPath { get; set; }
+        public string ApkTempPath { get; set; }
+        public string AssetTempPath { get; set; }
+        public string IndexTempPath { get; set; }
     }
 
     public class IndexPath

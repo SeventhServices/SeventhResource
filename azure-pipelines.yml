@@ -116,5 +116,6 @@ stages:
           inputs:
             sshEndpoint: 'Aliyun2SSH'
             runOptions: 'script'
+            readyTimeout: 300000
             scriptPath: '$(Build.SourcesDirectory)/deploy.sh'
             args: '$(containerName) $(imageName)'

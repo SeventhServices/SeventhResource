@@ -32,6 +32,7 @@ namespace Seventh.Resource.Api
         {
             services.AddControllers();
             services.AddSeventhCore();
+            services.AddResponseCaching();
             services.AddSeventhResourceServices(option =>
             {
                 option.PathOption = new PathOption(_environment.WebRootPath);
@@ -47,7 +48,12 @@ namespace Seventh.Resource.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ServeUnknownFileTypes = true
+            });
+
+            app.UseResponseCaching();
 
             app.UseRouting();
 
@@ -73,6 +79,17 @@ namespace Seventh.Resource.Api
             }
 
             TypeAdapterConfig<AssetFileInfo, DownloadFileDto>
+                .NewConfig()
+                .Map(des => des.MirrorUrl,
+                    src => UrlUtil.MakeFileUrl(
+                        MapContext.Current.Parameters["baseUrl"].ToString()
+                        ,src.MirrorSavePath))
+                .Map(des => des.SortedUrl,
+                    src => UrlUtil.MakeFileUrl(
+                        MapContext.Current.Parameters["baseUrl"].ToString()
+                        ,src.SortedSavePath));
+
+            TypeAdapterConfig<AssetFileInfo, AssetFileInfoDto>
                 .NewConfig()
                 .Map(des => des.MirrorUrl,
                     src => UrlUtil.MakeFileUrl(

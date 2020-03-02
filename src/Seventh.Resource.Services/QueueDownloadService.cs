@@ -9,21 +9,21 @@ using Seventh.Resource.Common.Entities;
 
 namespace Seventh.Resource.Services
 {
-    public class AssetQueueDownloadService
+    public class QueueDownloadService
     {
         private readonly IHttpClientFactory _clientFactory;
-        private readonly ITypedHttpClientFactory<AssetDownloadClient> _downloadClientFactory;
-        private readonly AssetSortService _sortService;
+        private readonly ITypedHttpClientFactory<DownloadClient> _downloadClientFactory;
+        private readonly SortService _sortService;
         private readonly ResourceLocation _location;
         private readonly Queue<DownloadFileTask> _taskQueue = new Queue<DownloadFileTask>();
         public bool IsFree { get; set; } = true;
 
-        private AssetDownloadClient _client;
-        private AssetDownloadService _downloadService;
+        private DownloadClient _client;
+        private DownloadService _downloadService;
 
-        public AssetQueueDownloadService(IHttpClientFactory clientFactory,
-            ITypedHttpClientFactory<AssetDownloadClient> downloadClientFactory,
-            AssetSortService sortService, ResourceLocation location)
+        public QueueDownloadService(IHttpClientFactory clientFactory,
+            ITypedHttpClientFactory<DownloadClient> downloadClientFactory,
+            SortService sortService, ResourceLocation location)
         {
             _clientFactory = clientFactory;
             _downloadClientFactory = downloadClientFactory;
@@ -63,12 +63,12 @@ namespace Seventh.Resource.Services
 
             if (_client == null)
             {
-                _client = _downloadClientFactory.CreateClient(_clientFactory.CreateClient(nameof(AssetQueueDownloadService)));
+                _client = _downloadClientFactory.CreateClient(_clientFactory.CreateClient(nameof(QueueDownloadService)));
             }
 
             if (_downloadService == null)
             {
-                _downloadService = new AssetDownloadService(_client,_sortService,_location);
+                _downloadService = new DownloadService(_client,_sortService,_location);
             }
 
             var eventArgs = new DownloadCompleteEventArgs();

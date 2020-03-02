@@ -2,14 +2,10 @@
 
 namespace Seventh.Core.Dto.Request.Resource
 {
-    public class TryDownloadFileDto
+    public class GetFileDto : GetFileDtoParams
     {
         [Required]
         [RegularExpression("^.*\\..*$")]
         public string FileName { get; set; }
-
-        public bool NeedHash { get; set; }
-
-        public int? Revision { get; set; }
     }
 }

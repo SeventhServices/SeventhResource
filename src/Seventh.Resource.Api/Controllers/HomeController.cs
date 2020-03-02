@@ -8,6 +8,7 @@ namespace Seventh.Resource.Api.Controllers
     [Route("")]
     public class HomeController : ControllerBase
     {
+        [ResponseCache(Duration = 18000)]
         public IActionResult Index()
         {
             return new JsonResult(new

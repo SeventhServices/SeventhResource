@@ -11,12 +11,13 @@ namespace Seventh.Resource
         public static void AddSeventhResourceServices(this IServiceCollection services)
         {
             services.TryAddSingleton(p => new ResourceLocation()
-                .ConfigureOptions());
+                .ConfigureLocation());
             services.TryAddSingleton<FileWatcherService>();
-            services.TryAddScoped<AssetDownloadService>();
-            services.AddHttpClient<AssetDownloadClient>();
-            services.TryAddSingleton<AssetSortService>();
-            services.TryAddSingleton<AssetQueueDownloadService>();
+            services.TryAddScoped<DownloadService>();
+            services.AddHttpClient<DownloadClient>();
+            services.TryAddSingleton<SortService>();
+            services.TryAddSingleton<QueueDownloadService>();
+            services.TryAddSingleton<AssetInfoService>();
         }
 
         public static void AddSeventhResourceServices(this IServiceCollection services, Action<ResourceOption> resourceOptionAction)
@@ -26,10 +27,11 @@ namespace Seventh.Resource
             services.TryAddSingleton(p => new ResourceLocation()
                 .UseStatusOptions(resourceOption));
             services.TryAddSingleton<FileWatcherService>();
-            services.TryAddScoped<AssetDownloadService>();
-            services.AddHttpClient<AssetDownloadClient>();
-            services.TryAddSingleton<AssetSortService>();
-            services.TryAddSingleton<AssetQueueDownloadService>();
+            services.TryAddScoped<DownloadService>();
+            services.AddHttpClient<DownloadClient>();
+            services.TryAddSingleton<SortService>();
+            services.TryAddSingleton<QueueDownloadService>();
+                        services.TryAddSingleton<AssetInfoService>();
         }
     }
 }

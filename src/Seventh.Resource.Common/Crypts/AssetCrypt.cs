@@ -156,23 +156,18 @@ namespace Seventh.Resource.Common.Crypts
                 var fileHash = BitConverter.ToString(hashBytes, 0, hashBytes.Length)
                     .Replace("-", string.Empty, StringComparison.Ordinal);
 
-                return versionTo == EncVersion.NoEnc 
-                        ? string.Concat(fileNameWithoutExtension,"_",fileHash,fileExtension)
-                        : string.Concat(fileNameWithoutExtension,"_",fileHash,fileExtension,".enc");
+                return string.Concat(fileNameWithoutExtension,"_",fileHash,fileExtension);
             }
             else
             {
                 var fileName = Path.GetFileNameWithoutExtension(filePath);
                 var fileExtension = Path.GetExtension(fileName);
-
                 if (fileName == null) return null;
                 var tempFileName = fileName.Split('_');
                 var exportFileName = string.Join("_",
                     tempFileName.Take(tempFileName.Length - 1));
 
-                return versionTo == EncVersion.NoEnc 
-                    ? string.Concat(exportFileName,fileExtension)
-                    : string.Concat(exportFileName,fileExtension,".enc");
+                return string.Concat(exportFileName,fileExtension,".enc");
             }
         }
 

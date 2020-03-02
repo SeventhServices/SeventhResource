@@ -13,13 +13,13 @@ namespace Seventh.Resource.Services
 
         public static ResourceLocation UseStatusOptions(this ResourceLocation optionService, ResourceOption options)
         {
-            if (optionService.PathOption == null)
+            if (options.PathOption == null)
             {
-                optionService.PathOption = new PathOption(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
+                options.PathOption = new PathOption(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location));
             }
-            if (optionService.SortOption == null)
+            if (options.SortOption == null)
             {
-                optionService.SortOption = new AssetSortOption();
+                options.SortOption = new SortOptions();
             }
             return optionService.SetOptions(options);
         }
@@ -30,13 +30,13 @@ namespace Seventh.Resource.Services
             {
                 Account = new Account(SecretKey.Implement.DefaultEncPid, SecretKey.Implement.DefaultId),
                 PathOption = new PathOption(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location)),
-                SortOption = new AssetSortOption()
+                SortOption = new SortOptions()
             };
             statusOption(defaultStatusOption);
             return optionService.SetOptions(defaultStatusOption);
         }
 
-        public static ResourceLocation ConfigureOptions(this ResourceLocation optionService)
+        public static ResourceLocation ConfigureLocation(this ResourceLocation optionService)
         {
             return ConfigureLocation(optionService, o => {});
         }

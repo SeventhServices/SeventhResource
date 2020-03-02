@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Seventh.Core.Dto.Request.Resource;
+using Seventh.Core.Dto.Response.Resource;
 using Seventh.Core.Services;
 using Seventh.Resource.Services;
 
@@ -21,31 +22,38 @@ namespace Seventh.Resource.Api.Controllers
         }
 
         [HttpPut("{DownloadUrl}")]
-        public IActionResult UpdateDownloadUrl([FromBody] UpdateDownloadUrlDto dto)
+        public IActionResult UpdateDownloadUrl(
+            [FromBody] UpdateDownloadUrlDto dto)
         {
             _location.DownloadUrl = dto.DownloadUrl;
 
-            return Ok(new
+            return Ok(new RefreshedDownloadUrlDto
             {
-                downloadUrl = _location.DownloadUrl
+                Result = true,
+                NowDownloadUrl = _location.DownloadUrl
             });
         }
 
         [HttpPost("{DownloadUrl}")]
-        public async Task<IActionResult> RefreshDownloadUrl()
+        public async Task<IActionResult> UpdateDownloadUrl()
         {
             var info = await _statusService.TryGetVersionInfoAsync();
 
             if (info == null)
             {
-                return NotFound();
+                return NotFound(new RefreshedDownloadUrlDto
+                {
+                    Result = false,
+                    NowDownloadUrl = _location.DownloadUrl
+                });
             }
 
             _location.DownloadUrl = info.AssetVersion.DownloadUrl;
 
-            return Ok(new
+            return Ok(new RefreshedDownloadUrlDto
             {
-                downloadUrl = _location.DownloadUrl
+                Result = true,
+                NowDownloadUrl = _location.DownloadUrl
             });
         }
     }

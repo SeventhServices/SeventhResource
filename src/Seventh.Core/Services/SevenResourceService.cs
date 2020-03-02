@@ -33,9 +33,14 @@ namespace Seventh.Core.Services
             return await _httpExtend.TryJsonGetAsync<DownloadFileDto>(string.Concat(BaseUrl,"file/download/",fileName),queries);
         }
 
-        public async Task<IEnumerable<DownloadFileDto>> TryDownloadNewFilesAsync(IEnumerable<TryDownloadFileDto> dtoList)
+        public async Task<IEnumerable<DownloadFileDto>> TryDownloadNewFilesAsync(IEnumerable<GetFileDto> dtoList)
         {
-            return await _httpExtend.TryJsonPostAsync<IEnumerable<TryDownloadFileDto>,IEnumerable<DownloadFileDto>>(string.Concat(BaseUrl,"file/download/"),dtoList);
+            return await _httpExtend.TryJsonPostAsync<IEnumerable<GetFileDto>,IEnumerable<DownloadFileDto>>(string.Concat(BaseUrl,"file/download/"),dtoList);
+        }
+
+        public async Task<RefreshedDownloadUrlDto> UpdateDownloadUrl()
+        {
+            return await _httpExtend.TryJsonPostAsync<RefreshedDownloadUrlDto>(string.Concat(BaseUrl,"config/downloadUrl"));
         }
     }
 }

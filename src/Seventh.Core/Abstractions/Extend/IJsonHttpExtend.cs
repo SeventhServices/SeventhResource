@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Seventh.Core.Extend
+namespace Seventh.Core.Abstractions.Extend
 {
     public interface IJsonHttpExtend
     {

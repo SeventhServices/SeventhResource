@@ -13,13 +13,13 @@ using Seventh.Resource.Common.Options;
 
 namespace Seventh.Resource.Services
 {
-    public class AssetDownloadService
+    public class DownloadService
     {
-        private readonly AssetSortService _sortService;
+        private readonly SortService _sortService;
         private readonly HttpClient _client;
         private readonly PathOption _pathOption;
 
-        public AssetDownloadService(AssetDownloadClient client, AssetSortService sortService, ResourceLocation location)
+        public DownloadService(DownloadClient client, SortService sortService, ResourceLocation location)
         {
             _sortService = sortService;
             _client = client.Client;
@@ -133,48 +133,7 @@ namespace Seventh.Resource.Services
             return (true, response.Content.Headers.ContentLength);
         }
 
-        public async Task<AssetFileInfo> 
-            DryGetAssetFileInfoAsync(string fileName, 
-                int? revision = 0, bool needHash = false)
-        {
-            if (needHash)
-            {
-                fileName = FileNameConverter.ToWithHashName(fileName);
-            }
 
-            var isGameMirror = !revision.HasValue;
-            long fileSize = 0; long realFileSize = 0;
-
-            var savePath = isGameMirror 
-                ? _pathOption.AssetPath.GameMirrorAssetPath.AppendPath(fileName)
-                : _pathOption.AssetPath.RevMirrorAssetPath.AppendPath(revision.Value.ToString(),fileName);
-
-            if (File.Exists(savePath))
-            {
-                fileSize = new FileInfo(savePath).Length;
-            }
-
-            var encVersion = AssetCrypt.IdentifyEncVersion(fileName);
-            var encFileName = fileName;
-            fileName = AssetCryptHelper.Rename(fileName, encVersion);
-            var sortedSavePath = await _sortService.SortAsync(fileName);
-
-            if (File.Exists(sortedSavePath))
-            {
-                realFileSize = new FileInfo(sortedSavePath).Length;
-            }
-
-            return new AssetFileInfo
-            {
-                FileName = encFileName,
-                RealFileName = fileName,
-                Revision = isGameMirror ? 0 : revision.Value,
-                FileSize = fileSize,
-                RealFileSize = realFileSize,
-                MirrorSavePath = savePath.Replace(_pathOption.RootPath, string.Empty),
-                SortedSavePath = sortedSavePath.Replace(_pathOption.RootPath, string.Empty)
-            };
-        }
 
         public async Task<(bool result ,bool pass)> TryUsePolicyAsync(string fileName, bool needHash, long maxLength, bool whenLengthNull = true)
         {
@@ -192,7 +151,7 @@ namespace Seventh.Resource.Services
 
         private async Task<string> SaveFile(string fileName, string savePath, HttpResponseMessage response)
         {
-            var tempSavePath = _pathOption.AssetPath.DownloadTempRootPath.AppendPath(fileName);
+            var tempSavePath = _pathOption.AssetPath.TempRootPath.AppendPath(fileName);
             await using var fileStream = File.OpenWrite(tempSavePath);
             await response.Content.CopyToAsync(fileStream);
             fileStream.Close();
@@ -206,16 +165,15 @@ namespace Seventh.Resource.Services
             DecryptAndSort(string fileName, string savePath)
         {
             var encVersion = AssetCrypt.IdentifyEncVersion(fileName);
-            var encFileName = fileName;
-            fileName = AssetCryptHelper.Rename(fileName, encVersion);
-            var sortedSavePath = await _sortService.SortAsync(fileName);
+            var realFileName = AssetCryptHelper.Rename(fileName, encVersion);
+            var sortedSavePath = await _sortService.SortAsync(realFileName);
 
             if (File.Exists(sortedSavePath))
             {
                 return new AssetFileInfo
                 {
-                    FileName = encFileName,
-                    RealFileName = fileName,
+                    FileName = fileName,
+                    RealFileName = realFileName,
                     FileSize = new FileInfo(savePath).Length,
                     RealFileSize = new FileInfo(sortedSavePath).Length,
                     MirrorSavePath = savePath,
@@ -228,8 +186,8 @@ namespace Seventh.Resource.Services
                 File.Copy(savePath, sortedSavePath);
                 return new AssetFileInfo
                 {
-                    FileName = encFileName,
-                    RealFileName = fileName,
+                    FileName = fileName,
+                    RealFileName = realFileName,
                     FileSize = new FileInfo(savePath).Length,
                     RealFileSize = new FileInfo(sortedSavePath).Length,
                     MirrorSavePath = savePath,
@@ -238,12 +196,12 @@ namespace Seventh.Resource.Services
             }
 
             await AssetCryptHelper.DecryptAsync(savePath, sortedSavePath, encVersion,
-                AssetCryptHelper.IdentifyShouldLz4(fileName));
+                AssetCryptHelper.IdentifyShouldLz4(realFileName));
 
             return new AssetFileInfo
             {
-                FileName = encFileName,
-                RealFileName = fileName,
+                FileName = fileName,
+                RealFileName = realFileName,
                 FileSize = new FileInfo(savePath).Length,
                 RealFileSize = new FileInfo(sortedSavePath).Length,
                 MirrorSavePath = savePath,

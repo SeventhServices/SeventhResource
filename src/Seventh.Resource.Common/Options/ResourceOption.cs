@@ -8,6 +8,6 @@ namespace Seventh.Resource.Common.Options
 
         public PathOption PathOption { get; set; }
 
-        public AssetSortOption SortOption { get; set; }
+        public SortOptions SortOption { get; set; }
     }
 }

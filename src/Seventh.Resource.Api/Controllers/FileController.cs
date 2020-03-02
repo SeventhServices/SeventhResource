@@ -16,21 +16,25 @@ namespace Seventh.Resource.Api.Controllers
     public class FileController : Controller
     {
         private readonly SevenResourceService _resourceService;
-        private readonly AssetDownloadService _downloadService;
-        private readonly AssetQueueDownloadService _queueDownloadService;
+        private readonly AssetInfoService _infoService;
+        private readonly DownloadService _downloadService;
+        private readonly QueueDownloadService _queueDownloadService;
 
         public FileController(SevenResourceService resourceService,
-            AssetDownloadService downloadService,
-            AssetQueueDownloadService queueDownloadService)
+            AssetInfoService infoService,
+            DownloadService downloadService,
+            QueueDownloadService queueDownloadService)
         {
             _resourceService = resourceService;
+            _infoService = infoService;
             _downloadService = downloadService;
             _queueDownloadService = queueDownloadService;
         }
 
         [HttpPost("Download")]
         [ResponseCache(Duration = 1800)]
-        public async Task<ActionResult<IEnumerable<DownloadFileDto>>> TryDownloadFiles(IEnumerable<TryDownloadFileDto> dtoList)
+        public async Task<ActionResult<IEnumerable<DownloadFileDto>>> 
+            TryDownloadFiles([FromBody] IEnumerable<GetFileDto> dtoList)
         {
             var downloadFiles = new List<DownloadFileDto>();
 
@@ -38,7 +42,7 @@ namespace Seventh.Resource.Api.Controllers
             {
                 DownloadFileDto downloadFileDto;
 
-                var info = await _downloadService.DryGetAssetFileInfoAsync(
+                var info = await _infoService.TryGetFileInfoAsync(
                     dto.FileName, dto.Revision, dto.NeedHash);
 
                 if (info.FileSize != 0 && info.RealFileSize != 0)
@@ -47,7 +51,8 @@ namespace Seventh.Resource.Api.Controllers
                         info.BuildAdapter()
                             .AddParameters("baseUrl", _resourceService.BaseUrl)
                             .AdaptToType<DownloadFileDto>();
-                    downloadFileDto.Result = true;
+                    downloadFileDto.DownloadCompleted = true;
+                    downloadFileDto.CanFound = true;
                     downloadFiles.Add(downloadFileDto);
                     continue;
                 }
@@ -59,7 +64,8 @@ namespace Seventh.Resource.Api.Controllers
                 {
                     downloadFiles.Add(new DownloadFileDto
                     {
-                        Result = false,
+                        CanFound = false,
+                        DownloadCompleted = false,
                         FileName = dto.FileName,
                         Revision = dto.Revision ?? 0
                     });
@@ -72,8 +78,8 @@ namespace Seventh.Resource.Api.Controllers
                         info.BuildAdapter()
                             .AddParameters("baseUrl", _resourceService.BaseUrl)
                             .AdaptToType<DownloadFileDto>();
-                    downloadFileDto.Result = false;
-                    downloadFiles.Add(downloadFileDto);
+                    downloadFileDto.DownloadCompleted = false;
+                    downloadFileDto.CanFound = true;
                     downloadFiles.Add(downloadFileDto);
                     _queueDownloadService.Enqueue(dto.Adapt<DownloadFileTask>());
                     _queueDownloadService.DequeueAll();
@@ -97,7 +103,8 @@ namespace Seventh.Resource.Api.Controllers
                 {
                     downloadFiles.Add(new DownloadFileDto
                     {
-                        Result = false,
+                        CanFound = false,
+                        DownloadCompleted = false,
                         FileName = dto.FileName,
                         Revision = dto.Revision ?? 0
                     });
@@ -108,19 +115,52 @@ namespace Seventh.Resource.Api.Controllers
                     info.BuildAdapter()
                         .AddParameters("baseUrl", _resourceService.BaseUrl)
                         .AdaptToType<DownloadFileDto>();
-                downloadFileDto.Result = true;
+                downloadFileDto.DownloadCompleted = true;
+                downloadFileDto.CanFound = true;
                 downloadFiles.Add(downloadFileDto);
             }
             return Ok(downloadFiles);
         }
 
-        [HttpGet("Download/{FileName}")]
+        [HttpPost("Download/{FileName}")]
         [ResponseCache(Duration = 120)]
         public async Task<ActionResult<DownloadFileDto>> TryGetDownloadFile(
             [RegularExpression("^.*\\..*$")] [Required] string fileName,
-            [FromQuery] TryGetDownloadFileDto dto)
+            [FromBody] GetFileDtoParams dto)
         {
-            bool result; AssetFileInfo info;
+            DownloadFileDto downloadFileDto;
+            var info = await _infoService.TryGetFileInfoAsync(
+                fileName, dto.Revision, dto.NeedHash);
+
+            if (info.FileSize != 0 && info.RealFileSize != 0)
+            {
+                downloadFileDto =
+                    info.BuildAdapter()
+                        .AddParameters("baseUrl", _resourceService.BaseUrl)
+                        .AdaptToType<DownloadFileDto>();
+                downloadFileDto.DownloadCompleted = true;
+                return Ok(downloadFileDto);
+            }
+
+            var (result, pass) = await _downloadService
+                .TryUsePolicyAsync(fileName, dto.NeedHash, 10_000_000);
+
+            if (!result)
+            {
+                return DownloadFail(fileName, dto.Revision);
+            }
+
+            if (!pass)
+            {
+                downloadFileDto =
+                    info.BuildAdapter()
+                        .AddParameters("baseUrl", _resourceService.BaseUrl)
+                        .AdaptToType<DownloadFileDto>();
+                downloadFileDto.DownloadCompleted = false;
+                _queueDownloadService.Enqueue(dto.Adapt<DownloadFileTask>());
+                _queueDownloadService.DequeueAll();
+                return Ok(downloadFileDto);
+            }
 
             if (dto.Revision != null)
             {
@@ -137,16 +177,28 @@ namespace Seventh.Resource.Api.Controllers
 
             if (!result)
             {
-                return NotFound();
+                return DownloadFail(fileName, dto.Revision);
             }
 
-            var downloadFileDto =
+            downloadFileDto =
                 info.BuildAdapter()
                     .AddParameters("baseUrl", _resourceService.BaseUrl)
                     .AdaptToType<DownloadFileDto>();
-
-            downloadFileDto.Result = true;
+            downloadFileDto.DownloadCompleted = true;
+            downloadFileDto.CanFound = true;
             return Ok(downloadFileDto);
+        }
+
+        private ActionResult<DownloadFileDto> DownloadFail(
+            string fileName, int? revision )
+        {
+            return NotFound(new DownloadFileDto
+            {
+                CanFound = false,
+                DownloadCompleted = false,
+                FileName = fileName,
+                Revision = revision ?? 0
+            });
         }
     }
 }

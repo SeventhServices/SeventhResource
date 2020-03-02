@@ -19,23 +19,23 @@ namespace Seventh.Resource.Common.Helpers
         {
             if (filePath == null) throw new ArgumentNullException(nameof(filePath));
             var encVersion = AssetCrypt.IdentifyEncVersion(filePath);
-            if (encVersion == AssetCrypt.EncVersion.NoEnc)
-            {
-                return;
-            }
             await DecryptAtDirectoryAsync(filePath, saveDirectory, encVersion, lz4)
                 .ConfigureAwait(false);
         }
 
         public static async Task DecryptWithRenameAsync(string filePath, string saveDirectory)
         {
-            await DecryptWithRenameAsync(filePath, saveDirectory, IdentifyShouldLz4(filePath))
+            var fileName = Path.GetFileName(filePath);
+            var encVersion = AssetCrypt.IdentifyEncVersion(filePath);
+            await DecryptAsync(filePath, saveDirectory.AppendPath(Rename(fileName, encVersion)), 
+                    encVersion, IdentifyShouldLz4(fileName))
                 .ConfigureAwait(false);
         }
 
         public static async Task DecryptAsync(string filePath, string savePath)
         {
-            await DecryptAsync(filePath, savePath, AssetCrypt.IdentifyEncVersion(filePath), IdentifyShouldLz4(filePath))
+            var encVersion = AssetCrypt.IdentifyEncVersion(filePath);
+            await DecryptAsync(filePath, savePath, encVersion, IdentifyShouldLz4(filePath))
                 .ConfigureAwait(false);
         }
 
@@ -62,21 +62,25 @@ namespace Seventh.Resource.Common.Helpers
 
         public static string Rename(string filePath, AssetCrypt.EncVersion encVersion)
         {
-            return AssetCrypt.ConvertFileName(filePath,encVersion,AssetCrypt.EncVersion.NoEnc);
+            if (encVersion == AssetCrypt.EncVersion.NoEnc)
+            {
+                return filePath;
+            }
+
+            var encVersion1FilePath = AssetCrypt.ConvertFileName(filePath, encVersion, AssetCrypt.EncVersion.Ver1);
+
+            return encVersion1FilePath?.Remove(encVersion1FilePath.Length - 4);
         }
 
         public static bool IdentifyShouldLz4(string filePath)
         {
-            if (filePath == null)
-            {
-                return false;
-            }
+            if (filePath == null) return false;
 
             var type = Path.GetExtension(filePath);
 
-            return Equals(type, "txt") ||
-                   Equals(type, "sql") ||
-                   Equals(type, "json");
+            return type.Equals(".txt",StringComparison.OrdinalIgnoreCase) ||
+                   type.Equals(".sql",StringComparison.OrdinalIgnoreCase) ||
+                   type.Equals(".json",StringComparison.OrdinalIgnoreCase);
         }
     }
 }

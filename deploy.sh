@@ -18,7 +18,7 @@
 				echo 'failed to stop container...'
 				exit $rc;
 			fi
-		echo "toped container : $containers"
+		echo "stoped container : $containers"
 	fi
 	   
 	containers_stop=$(docker ps -q -a --filter name=$1)

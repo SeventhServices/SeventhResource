@@ -3,11 +3,11 @@ using System.Net.Http;
 
 namespace Seventh.Resource.Services
 {
-    public class AssetDownloadClient
+    public class DownloadClient
     {
         public HttpClient Client { get; }
 
-        public AssetDownloadClient(HttpClient httpClient, ResourceLocation option)
+        public DownloadClient(HttpClient httpClient, ResourceLocation option)
         {
             httpClient.BaseAddress = new Uri(option.DownloadUrl);
             httpClient.Timeout = TimeSpan.FromMinutes(5);
