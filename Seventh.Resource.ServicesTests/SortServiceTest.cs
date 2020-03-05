@@ -12,8 +12,8 @@ namespace Seventh.Resource.ServicesTests
         public void ShouldProvideExtendPath()
         {
             var sortService = new SortService(new ResourceLocation().ConfigureLocation());
-            var fileName = "specialshop_menu_2245_a.png.enc";
-            var s = sortService.SortAsync(fileName);
+            var fileName = "top.jpg";
+            var s = sortService.SortAsync(fileName,399).Result;
         }
     }
 }

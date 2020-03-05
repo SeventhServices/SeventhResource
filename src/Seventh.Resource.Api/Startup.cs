@@ -14,6 +14,8 @@ using System.Security.Policy;
 using Seventh.Core.Extend;
 using Seventh.Core.Utilities;
 using Seventh.Core;
+using System.IO;
+using Seventh.Resource.Common.Extensions;
 
 namespace Seventh.Resource.Api
 {
@@ -99,6 +101,25 @@ namespace Seventh.Resource.Api
                     src => UrlUtil.MakeFileUrl(
                         MapContext.Current.Parameters["baseUrl"].ToString()
                         ,src.SortedSavePath));
+
+            //var sortedPath = location.PathOption.AssetPath.SortedAssetPath;
+            //var sortService = services.GetService<SortService>();
+
+            //var fileInfos = new DirectoryInfo(sortedPath).GetFiles();
+            //foreach (var fileInfo in fileInfos)
+            //{
+            //    try
+            //    {
+            //        File.Copy(fileInfo.FullName,
+            //            sortService.SortAsync(fileInfo.Name,info.AssetVersion.Revision).Result
+            //            ,true);
+            //        File.Delete(fileInfo.FullName);
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Console.WriteLine(e);
+            //    }
+            //}
         }
     }
 }

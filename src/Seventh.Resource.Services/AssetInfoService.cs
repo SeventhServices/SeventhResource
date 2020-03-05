@@ -37,7 +37,7 @@ namespace Seventh.Resource.Services
                 var fileName = fileInfo.Name;
                 var encVersion = AssetCrypt.IdentifyEncVersion(fileName);
                 var realFileName = AssetCryptHelper.Rename(fileName, encVersion);
-                var sortedSavePath = await _sortService.SortAsync(realFileName);
+                var sortedSavePath = await _sortService.SortAsync(realFileName, revision);
 
                 if (File.Exists(sortedSavePath))
                 {
@@ -81,7 +81,9 @@ namespace Seventh.Resource.Services
 
             var encVersion = AssetCrypt.IdentifyEncVersion(fileName);
             var realFileName = AssetCryptHelper.Rename(fileName, encVersion);
-            var sortedSavePath = await _sortService.SortAsync(realFileName);
+            var sortedSavePath = isGameMirror
+                ? await _sortService.SortAsync(realFileName)
+                : await _sortService.SortAsync(realFileName, revision.Value);
 
             if (File.Exists(sortedSavePath))
             {

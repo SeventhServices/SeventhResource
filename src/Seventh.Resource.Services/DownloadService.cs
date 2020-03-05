@@ -40,7 +40,7 @@ namespace Seventh.Resource.Services
                 return (false, null);
             }
 
-            var info = await DecryptAndSort(fileName, string.Concat(_pathOption.RootPath, savePath));
+            var info = await DecryptAndSort(fileName, string.Concat(_pathOption.RootPath, savePath), revision);
             info.Revision = revision;
             info.MirrorSavePath = info.MirrorSavePath.Replace(_pathOption.RootPath, string.Empty);
             info.SortedSavePath = info.SortedSavePath.Replace(_pathOption.RootPath, string.Empty);
@@ -184,6 +184,54 @@ namespace Seventh.Resource.Services
             if (encVersion == AssetCrypt.EncVersion.NoEnc)
             {
                 File.Copy(savePath, sortedSavePath);
+                return new AssetFileInfo
+                {
+                    FileName = fileName,
+                    RealFileName = realFileName,
+                    FileSize = new FileInfo(savePath).Length,
+                    RealFileSize = new FileInfo(sortedSavePath).Length,
+                    MirrorSavePath = savePath,
+                    SortedSavePath = sortedSavePath
+                };
+            }
+
+            await AssetCryptHelper.DecryptAsync(savePath, sortedSavePath, encVersion,
+                AssetCryptHelper.IdentifyShouldLz4(realFileName));
+
+            return new AssetFileInfo
+            {
+                FileName = fileName,
+                RealFileName = realFileName,
+                FileSize = new FileInfo(savePath).Length,
+                RealFileSize = new FileInfo(sortedSavePath).Length,
+                MirrorSavePath = savePath,
+                SortedSavePath = sortedSavePath
+            };
+        }
+
+        private async Task<AssetFileInfo>
+            DecryptAndSort(string fileName, string savePath, int revision)
+        {
+            var encVersion = AssetCrypt.IdentifyEncVersion(fileName);
+            var realFileName = AssetCryptHelper.Rename(fileName, encVersion);
+            var sortedSavePath = await _sortService.SortAsync(realFileName, revision);
+
+            if (File.Exists(sortedSavePath))
+            {
+                return new AssetFileInfo
+                {
+                    FileName = fileName,
+                    RealFileName = realFileName,
+                    FileSize = new FileInfo(savePath).Length,
+                    RealFileSize = new FileInfo(sortedSavePath).Length,
+                    MirrorSavePath = savePath,
+                    SortedSavePath = sortedSavePath
+                };
+            }
+
+            if (encVersion == AssetCrypt.EncVersion.NoEnc)
+            {
+                File.Copy(savePath, sortedSavePath,true);
                 return new AssetFileInfo
                 {
                     FileName = fileName,

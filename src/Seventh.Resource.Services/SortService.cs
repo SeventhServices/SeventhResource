@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Seventh.Resource.Common.Extensions;
+using Seventh.Resource.Common.Utilities;
 
 namespace Seventh.Resource.Services
 {
@@ -28,7 +29,7 @@ namespace Seventh.Resource.Services
         private readonly char _fileExtensionSeparator = '.';
         private readonly char _defaultNameSeparator = '_';
         private readonly Regex _numRegex = new Regex(@"^\d+$");
-        private readonly Regex _needClassSortRegex = new Regex(@"\d{4,}");
+        private readonly Regex _needClassSortRegex = new Regex(@"_+\d{4,}");
 
 
         public ValueTask<string> SortAsync(string fileName)
@@ -48,8 +49,12 @@ namespace Seventh.Resource.Services
             {
                 if (regex.IsMatch(fileName) == expect)
                 {
-                     fileName = fileName.Insert(fileName.IndexOf(_fileExtensionSeparator),
+                    var insetIndex = fileName.IndexOf(_fileExtensionSeparator);
+                     fileName = fileName.Insert(insetIndex == -1 
+                             ? fileName.Length 
+                             : insetIndex ,
                         $"_r{revision}");
+                     break;
                 }
             }
             return fileName;
@@ -58,10 +63,10 @@ namespace Seventh.Resource.Services
         public string ProvideExtendPath(StringBuilder pathBuilder,string fileName)
         {
             pathBuilder.Append(_separator);
-            var path = TryAsRuleSort(fileName);
-            if (path != null)
+            var result = TryAsRuleSort(pathBuilder,fileName);
+            if (result)
             {
-                return path;
+                return pathBuilder.ToString();
             }
 
             if (_needClassSortRegex.IsMatch(fileName))
@@ -74,6 +79,7 @@ namespace Seventh.Resource.Services
                 : AsFirstClassSort(pathBuilder, fileName);
         }
 
+
         private static ReadOnlySpan<char> RemoveIf(ReadOnlySpan<char> text ,char splitChar)
         {
             var index = text.IndexOf(splitChar);
@@ -83,21 +89,34 @@ namespace Seventh.Resource.Services
         private static ReadOnlySpan<char> TakeIf(ReadOnlySpan<char> text ,char splitChar)
         {
             var index = text.IndexOf(splitChar);
-            return index != -1 ? text.Slice(index) : text;
+            return index != -1 ? text.Slice(index + 1) : text;
         }
 
-        public string TryAsRuleSort(string fileName)
+        public bool TryAsRuleSort(StringBuilder pathBuilder,string fileName)
         {
-            var rules = _location.SortOption.Rules;
-            return null;
+            foreach (var (regex,path) in _location.SortOption.ConsumeRules)
+            {
+                if (!regex.IsMatch(fileName))
+                {
+                    continue;
+                }
+                pathBuilder.Append(path.Replace(':', _separator));
+                AppendFileName(pathBuilder, fileName);
+                return true;
+            }
+            return false;
         }
+
+
 
         public string AsTypeSort(StringBuilder pathBuilder,string fileName)
         {
-            var type = Path.GetExtension(fileName);
-            pathBuilder.Append(type);
+            var extension = TakeIf(fileName, _fileExtensionSeparator);
+            var pathPart = new Span<char>(new char[extension.Length]);
+            extension.ToLowerInvariant(pathPart);
+            pathBuilder.Append(pathPart);
             pathBuilder.Append(_separator);
-            pathBuilder.Append(fileName);
+            AppendFileName(pathBuilder, fileName);
             var path = pathBuilder.ToString();
             return path;
         }
@@ -105,9 +124,11 @@ namespace Seventh.Resource.Services
         public string AsFirstClassSort(StringBuilder pathBuilder, string fileName)
         {
             var firstClass = RemoveIf(fileName,_defaultNameSeparator);
-            pathBuilder.Append(firstClass);
+            var pathPart = new Span<char>(new char[firstClass.Length]);
+            firstClass.ToLowerInvariant(pathPart);
+            pathBuilder.Append(pathPart);
             pathBuilder.Append(_separator);
-            pathBuilder.Append(fileName);
+            AppendFileName(pathBuilder, fileName);
             var path = pathBuilder.ToString();
             return path;
         }
@@ -120,15 +141,23 @@ namespace Seventh.Resource.Services
             {
                 if (!_numRegex.IsMatch(part))
                 {
-                    pathBuilder.Append(part);
+                    pathBuilder.Append(part.ToLowerInvariant());
                     pathBuilder.Append(_separator);
                     continue;
                 }
-                pathBuilder.Append(fileName);
+                AppendFileName(pathBuilder, fileName);
                 break;
             }
             var path = pathBuilder.ToString();
             return path;
+        }
+
+
+        private static string AppendFileName(StringBuilder pathBuilder, string fileName)
+        {
+            CommonUtil.CreateNonexistentDirectory(pathBuilder.ToString());
+            pathBuilder.Append(fileName);
+            return pathBuilder.ToString();
         }
 
     }
