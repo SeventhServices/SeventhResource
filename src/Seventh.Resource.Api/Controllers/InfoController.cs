@@ -26,6 +26,15 @@ namespace Seventh.Resource.Api.Controllers
             _infoService = infoService;
         }
 
+        [ResponseCache(Duration = 120)]
+        [HttpHead("Files")]
+        [HttpGet("Files")]
+        public async Task<ActionResult<GetFileResultDto>> 
+            GetFileInfos([FromQuery] GetFileDtoParams dto)
+        {
+            return NotFound();
+        }
+
         [ResponseCache(Duration = 300)]
         [HttpGet("Revision/{Revision}")]
         [HttpHead("Revision/{Revision}")]

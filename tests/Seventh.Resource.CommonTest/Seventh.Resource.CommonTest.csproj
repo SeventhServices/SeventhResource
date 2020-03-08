@@ -23,4 +23,23 @@
     <ProjectReference Include="..\..\src\Seventh.Resource.Common\Seventh.Resource.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestExample\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TestExample\login_bonus_435_01.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestExample\login_bonus_435_01.jpg.enc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestExample\test.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestExample\test.bin.enc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

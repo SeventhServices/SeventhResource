@@ -34,65 +34,64 @@ namespace Seventh.Resource.Common.Crypts
 
             var fileSigSize = SignatureSize; //"t7s-enc",size =7;
             if (encVersion == EncVersion.Ver1) fileSigSize = 0;
-            var array = new byte[16];
-            var array2 = CommonUtil.ConvertByte(data); //文件数据转换为数组
-            if (array2.Length <= (16 | fileSigSize)) return null;
 
-            var array3 = new byte[array2.Length - fileSigSize - 16]; //文件数组 - 文件头(16) - 文件标签(7)
-            Buffer.BlockCopy(array2, fileSigSize, array, 0, 16);
-            Buffer.BlockCopy(array2, fileSigSize | 16, array3, 0, array2.Length - fileSigSize - 16);
-            byte[] array4;
+            var dataArray = CommonUtil.ConvertByte(data); //文件数据转换为数组
+            if (dataArray.Length <= (16 | fileSigSize)) return null;
+
+            var ivArray = new byte[16];
+            var encryptedArray = new byte[dataArray.Length - fileSigSize - 16]; //文件数组 - 文件头(16) - 文件标签(7)
+            Buffer.BlockCopy(dataArray, fileSigSize, ivArray, 0, 16);
+            Buffer.BlockCopy(dataArray, fileSigSize | 16, encryptedArray, 0, dataArray.Length - fileSigSize - 16);
+            byte[] decryptedArray;
             if (encVersion == EncVersion.Ver1)
             {
                 using var rhinelandManaged = new RijndaelManaged
                 {
                     BlockSize = 128,
                     KeySize = 128,
-                    IV = array,
+                    IV = ivArray,
                     Key = PrivateKey,
                     Mode = CipherMode.CBC,
                     Padding = PaddingMode.PKCS7
                 };
                 using var cryptoTransform = rhinelandManaged.CreateDecryptor();
-                array4 = cryptoTransform.TransformFinalBlock(
-                    array3, 0, array3.Length);
+                decryptedArray = cryptoTransform.TransformFinalBlock(
+                    encryptedArray, 0, encryptedArray.Length);
             }
             else
             {
                 SetShuffledKey(PrivateKey2);
-                using (var rhinelandManaged = new RijndaelManaged())
+                using var rhinelandManaged = new RijndaelManaged
                 {
-                    rhinelandManaged.BlockSize = 128;
-                    rhinelandManaged.KeySize = 128;
-                    rhinelandManaged.IV = array;
-                    rhinelandManaged.Key = _shuffledKey;
-                    rhinelandManaged.Mode = CipherMode.CBC;
-                    rhinelandManaged.Padding = PaddingMode.PKCS7;
-                    using var cryptoTransform = rhinelandManaged.CreateDecryptor();
-                    array4 = cryptoTransform.TransformFinalBlock(array3, 0, array3.Length);
-                }
-
+                    BlockSize = 128,
+                    KeySize = 128,
+                    IV = ivArray,
+                    Key = _shuffledKey,
+                    Mode = CipherMode.CBC,
+                    Padding = PaddingMode.PKCS7
+                };
+                using var cryptoTransform = rhinelandManaged.CreateDecryptor();
+                decryptedArray = cryptoTransform.TransformFinalBlock(encryptedArray, 0, encryptedArray.Length);
                 ClearShuffledKey();
             }
 
-            return !lz4 ? array4 : LZ4Codec.Decode(array4, 4, array4.Length - 4, BitConverter.ToInt32(array4, 0));
+            return !lz4 ? decryptedArray : LZ4Codec.Decode(decryptedArray, 4, decryptedArray.Length - 4, BitConverter.ToInt32(decryptedArray, 0));
         }
 
-        [Obsolete("for only ver1 encrypt.")]
-        public static byte[] Encrypt<T>(T data, bool lz4 = false)
+        public static byte[] Encrypt<T>(T data, bool lz4 = false, EncVersion encVersion = EncVersion.Ver1)
         {
             if (data == null) return null;
 
-            var array = CommonUtil.ConvertByte(data);
+            var dataArray = CommonUtil.ConvertByte(data);
             if (lz4)
             {
-                var array2 = LZ4Codec.EncodeHC(array, 0, array.Length);
-                if (array2.Length > 0)
+                var lz4Array = LZ4Codec.EncodeHC(dataArray, 0, dataArray.Length);
+                if (lz4Array.Length > 0)
                 {
-                    var value = array.Length;
-                    array = new byte[array2.Length + 4];
-                    Buffer.BlockCopy(BitConverter.GetBytes(value), 0, array, 0, 4);
-                    Buffer.BlockCopy(array2, 0, array, 4, array2.Length);
+                    var value = dataArray.Length;
+                    dataArray = new byte[lz4Array.Length + 4];
+                    Buffer.BlockCopy(BitConverter.GetBytes(value), 0, dataArray, 0, 4);
+                    Buffer.BlockCopy(lz4Array, 0, dataArray, 4, lz4Array.Length);
                 }
                 else
                 {
@@ -100,24 +99,50 @@ namespace Seventh.Resource.Common.Crypts
                 }
             }
 
-            using var rhinelandManaged = new RijndaelManaged
+            if (encVersion == EncVersion.Ver1)
             {
-                BlockSize = 128,
-                KeySize = 128,
-                Key = PrivateKey,
-                Mode = CipherMode.CBC,
-                Padding = PaddingMode.PKCS7
-            };
-            rhinelandManaged.GenerateIV();
-            var iV = rhinelandManaged.IV;
-            using var cryptoTransform = rhinelandManaged.CreateEncryptor();
-            {
-                var array2 = cryptoTransform.TransformFinalBlock(array, 0, array.Length);
-                var array3 = new byte[iV.Length + array2.Length];
-                Buffer.BlockCopy(iV, 0, array3, 0, 16);
-                Buffer.BlockCopy(array2, 0, array3, 16, array2.Length);
-                return array3;
+                using var rhinelandManaged = new RijndaelManaged
+                {
+                    BlockSize = 128,
+                    KeySize = 128,
+                    Key = PrivateKey,
+                    Mode = CipherMode.CBC,
+                    Padding = PaddingMode.PKCS7
+                };
+                rhinelandManaged.GenerateIV();
+                var iv = rhinelandManaged.IV;
+                using var cryptoTransform = rhinelandManaged.CreateEncryptor();
+                var encryptedDataArray = cryptoTransform.TransformFinalBlock(dataArray, 0, dataArray.Length);
+
+                var encryptedArray = new byte[iv.Length + encryptedDataArray.Length];
+                Buffer.BlockCopy(iv, 0, encryptedArray, 0, 16);
+                Buffer.BlockCopy(encryptedDataArray, 0, encryptedArray, 16, encryptedDataArray.Length);
+                return encryptedArray;
             }
+            else
+            {
+                SetShuffledKey(PrivateKey2);
+                using var rhinelandManaged = new RijndaelManaged
+                {
+                    BlockSize = 128,
+                    KeySize = 128,
+                    Key = _shuffledKey,
+                    Mode = CipherMode.CBC,
+                    Padding = PaddingMode.PKCS7
+                };
+                ClearShuffledKey();
+                rhinelandManaged.GenerateIV();
+                var iv = rhinelandManaged.IV;
+                using var cryptoTransform = rhinelandManaged.CreateEncryptor();
+                var encryptedDataArray = cryptoTransform.TransformFinalBlock(dataArray, 0, dataArray.Length);
+
+                var encryptedArray = new byte[SignatureSize + iv.Length + encryptedDataArray.Length];
+                Buffer.BlockCopy(iv, 0, encryptedArray, SignatureSize, 16);
+                Buffer.BlockCopy(encryptedDataArray, 0, encryptedArray, SignatureSize | 16, encryptedDataArray.Length);
+                Buffer.BlockCopy(FileSignature, 0, encryptedArray, 0, SignatureSize);
+                return encryptedArray;
+            }
+
         }
 
         private static void SetShuffledKey(byte[] rawKey)
