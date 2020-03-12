@@ -11,6 +11,7 @@ namespace Seventh.Resource.Services
         public SortOptions SortOption { get; set; }
         public PathOption PathOption { get; set; }
         public string DownloadUrl { get; set; }
+        public string DownloadBaseUrl { get; set; } = "https://d2kvktrbzlzxwg.cloudfront.net/";
 
         public ResourceLocation SetOptions(ResourceOption options)
         {

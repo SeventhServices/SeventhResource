@@ -13,8 +13,10 @@ namespace Seventh.Resource
             services.TryAddSingleton(p => new ResourceLocation()
                 .ConfigureLocation());
             services.TryAddSingleton<FileWatcherService>();
-            services.TryAddScoped<DownloadService>();
             services.AddHttpClient<DownloadClient>();
+            services.TryAddScoped<DownloadService>();
+            services.AddHttpClient<OneByOneDownloadClient>();
+            services.TryAddScoped<OneByOneDownloadService>();
             services.TryAddSingleton<SortService>();
             services.TryAddSingleton<QueueDownloadService>();
             services.TryAddSingleton<AssetInfoService>();
@@ -29,6 +31,8 @@ namespace Seventh.Resource
             services.TryAddSingleton<FileWatcherService>();
             services.TryAddScoped<DownloadService>();
             services.AddHttpClient<DownloadClient>();
+            services.AddHttpClient<OneByOneDownloadClient>();
+            services.TryAddScoped<OneByOneDownloadService>();
             services.TryAddSingleton<SortService>();
             services.TryAddSingleton<QueueDownloadService>();
                         services.TryAddSingleton<AssetInfoService>();

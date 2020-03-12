@@ -181,7 +181,7 @@ namespace Seventh.Resource.Common.Crypts
                 var fileHash = BitConverter.ToString(hashBytes, 0, hashBytes.Length)
                     .Replace("-", string.Empty, StringComparison.Ordinal);
 
-                return string.Concat(fileNameWithoutExtension,"_",fileHash,fileExtension);
+                return string.Concat(fileNameWithoutExtension,"_",fileHash,fileExtension,".enc");
             }
             else
             {

@@ -31,7 +31,7 @@ namespace Seventh.Resource.Services
             _location = location;
         }
 
-        public void Enqueue (DownloadFileTask task)
+        public void Enqueue(DownloadFileTask task)
         {
             if (_taskQueue.Any(t => 
                 t.FileName.Equals(task.FileName)))

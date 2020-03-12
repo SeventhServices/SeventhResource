@@ -7,6 +7,7 @@ using Seventh.Core.Dto.Request.Resource;
 using Seventh.Core.Dto.Response.Resource;
 using Seventh.Core.Services;
 using Seventh.Resource.Common.Entities;
+using Seventh.Resource.Common.Helpers;
 using Seventh.Resource.Services;
 
 namespace Seventh.Resource.Api.Controllers
@@ -30,10 +31,33 @@ namespace Seventh.Resource.Api.Controllers
             _downloadService = downloadService;
             _queueDownloadService = queueDownloadService;
         }
+        [HttpPost("Download/Card/{CardId}")]
+        [ResponseCache(Duration = 120)]
+        public async Task<ActionResult<DownloadFileDto>> TryGetDownloadLargeCard(
+    [FromServices] OneByOneDownloadService downloadService, int cardId)
+        {
+
+            var (result, info) =
+                  await downloadService.TryDownloadLargeCard(cardId);
+
+            if (!result)
+            {
+                return DownloadFail(FileNameConverter.ToLargeCardFile(cardId), 0);
+            }
+
+            var downloadFileDto =
+                info.BuildAdapter()
+                    .AddParameters("baseUrl", _resourceService.BaseUrl)
+                    .AdaptToType<DownloadFileDto>();
+            downloadFileDto.DownloadCompleted = true;
+            downloadFileDto.CanFound = true;
+
+            return Ok(downloadFileDto);
+        }
 
         [HttpPost("Download")]
         [ResponseCache(Duration = 1800)]
-        public async Task<ActionResult<IEnumerable<DownloadFileDto>>> 
+        public async Task<ActionResult<IEnumerable<DownloadFileDto>>>
             TryDownloadFiles([FromBody] IEnumerable<GetFileDto> dtoList)
         {
             var downloadFiles = new List<DownloadFileDto>();
@@ -190,7 +214,7 @@ namespace Seventh.Resource.Api.Controllers
         }
 
         private ActionResult<DownloadFileDto> DownloadFail(
-            string fileName, int? revision )
+            string fileName, int? revision)
         {
             return NotFound(new DownloadFileDto
             {

@@ -32,6 +32,11 @@ namespace Seventh.Core.Services
             }; 
             return await _httpExtend.TryJsonGetAsync<DownloadFileDto>(string.Concat(BaseUrl,"file/download/",fileName),queries);
         }
+        
+        public async Task<DownloadFileDto> TryDownloadLargeCardAsync(int cardId)
+        {
+            return await _httpExtend.TryJsonPostAsync<DownloadFileDto>(string.Concat(BaseUrl,"file/download/",cardId.ToString()) );
+        }
 
         public async Task<IEnumerable<DownloadFileDto>> TryDownloadNewFilesAsync(IEnumerable<GetFileDto> dtoList)
         {
