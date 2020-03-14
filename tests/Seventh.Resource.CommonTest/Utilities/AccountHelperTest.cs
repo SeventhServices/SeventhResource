@@ -12,10 +12,22 @@ namespace Seventh.Resource.CommonTest.Utilities
         public void ShouldConvert()
         {
             var uuid = Guid.NewGuid();
-            AccountHelper.ConvertToFile(new Account("7901801", uuid.ToString(), false), Directory.GetCurrentDirectory());
+            
+            var filePath = AccountHelper.GetExportAccountFilePath("7901801", "");
 
-            var filePath = AccountHelper.GetAccountFilePath("7901801", Directory.GetCurrentDirectory());
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            var testAccount = new Account("7901801", uuid.ToString(), false);
+            AccountHelper.ExportToFile(testAccount, "");
+
             Assert.True(File.Exists(filePath));
+
+            var inputAccount = AccountHelper.ReadFromFile("7901801", "");
+
+            Assert.Equal(inputAccount, testAccount);
         }
     }
 }

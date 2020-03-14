@@ -71,10 +71,8 @@ namespace Seventh.Resource.Common.Entities
                    && Uuid == account.Uuid
                    && EncPid == account.EncPid
                    && Tpid == account.Tpid
-                   && Id == account.Id
-                   && Ivs == account.Ivs;
+                   && Id == account.Id;
         }
-
 
         public override int GetHashCode()
         {

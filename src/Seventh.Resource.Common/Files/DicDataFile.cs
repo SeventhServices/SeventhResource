@@ -7,7 +7,6 @@ namespace Seventh.Resource.Common.Files
 {
     public class FileDictionary : Dictionary<string, string>, IFileDictionary
     {
-
         private const int IntShift = 8;
 
         private const int IntLength = 4;
@@ -17,7 +16,8 @@ namespace Seventh.Resource.Common.Files
         public FileDictionary(string filePath)
         {
             FilePath = filePath;
-            if (File.Exists(filePath)) return;
+            if (!File.Exists(filePath)) return;
+
             try
             {
                 var bytes = new Queue<byte>(File.ReadAllBytes(filePath));
