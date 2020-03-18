@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Http;
 using Seventh.Resource.Common.Entities;
@@ -92,7 +91,7 @@ namespace Seventh.Resource.Services
         public class DownloadCompleteEventArgs
         {
             public bool Result { get; set; }
-            public AssetFileInfo Info { get; set; }
+            public AssetInfo Info { get; set; }
         }
 
         public event EventHandler<DownloadCompleteEventArgs> DownloadCompete;

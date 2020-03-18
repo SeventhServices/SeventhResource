@@ -31,7 +31,6 @@ namespace Seventh.Resource.Services
         private readonly Regex _numRegex = new Regex(@"^\d+$");
         private readonly Regex _needClassSortRegex = new Regex(@"_+\d{4,}");
 
-
         public ValueTask<string> SortAsync(string fileName)
         {
             return new ValueTask<string>(ProvideExtendPath(

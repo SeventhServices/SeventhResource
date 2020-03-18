@@ -1,15 +1,10 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using Seventh.Resource.Common.Crypts;
 using Seventh.Resource.Common.Entities;
 using Seventh.Resource.Common.Extensions;
 using Seventh.Resource.Common.Helpers;
-using Seventh.Resource.Common.Options;
 using Seventh.Resource.Services.Abstractions;
 
 namespace Seventh.Resource.Services
@@ -24,7 +19,7 @@ namespace Seventh.Resource.Services
             _client = client.Client;
         }
 
-        public async Task<(bool result, AssetFileInfo info)>
+        public async Task<(bool result, AssetInfo info)>
             TryDownloadAtRevisionAndSortAsync(string fileName, int revision, bool needHash)
         {
             if (needHash)
@@ -39,13 +34,13 @@ namespace Seventh.Resource.Services
             }
 
             var info = await DecryptAndSort(fileName, string.Concat(LocalPathOption.RootPath, savePath), revision);
-            info.Revision = revision;
-            info.MirrorSavePath = info.MirrorSavePath.Replace(LocalPathOption.RootPath, string.Empty);
-            info.SortedSavePath = info.SortedSavePath.Replace(LocalPathOption.RootPath, string.Empty);
+            info.SetRevision(revision);
+            info.MirrorFileInfo.Path = info.MirrorFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
+            info.SortedFileInfo.Path = info.SortedFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
             return (true, info);
         }
 
-        public async Task<(bool result, AssetFileInfo info)>
+        public async Task<(bool result, AssetInfo info)>
             TryDownloadAtMirrorAndSortAsync(string fileName, bool needHash)
         {
             if (needHash)
@@ -60,9 +55,9 @@ namespace Seventh.Resource.Services
             }
             
             var info = await DecryptAndSort(fileName, string.Concat(LocalPathOption.RootPath, savePath));
-            info.Revision = 0;
-            info.MirrorSavePath = info.MirrorSavePath.Replace(LocalPathOption.RootPath, string.Empty);
-            info.SortedSavePath = info.SortedSavePath.Replace(LocalPathOption.RootPath, string.Empty);
+            info.SetRevision(0);
+            info.MirrorFileInfo.Path = info.MirrorFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
+            info.SortedFileInfo.Path = info.SortedFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
             return (true,info);
         }
 

@@ -14,7 +14,7 @@ namespace Seventh.Resource.Services.Abstractions
         private readonly SortService _sortService;
         protected readonly PathOption LocalPathOption;
 
-        protected BaseDownloadService(SortService sortService,ResourceLocation location)
+        protected BaseDownloadService(SortService sortService, ResourceLocation location)
         {
             _sortService = sortService;
             LocalPathOption = location.PathOption;
@@ -32,7 +32,7 @@ namespace Seventh.Resource.Services.Abstractions
             return savePath;
         }
 
-        protected async Task<AssetFileInfo>
+        protected async Task<AssetInfo>
             DecryptAndSort(string fileName, string savePath)
         {
             var encVersion = AssetCrypt.IdentifyEncVersion(fileName);
@@ -41,46 +41,63 @@ namespace Seventh.Resource.Services.Abstractions
 
             if (File.Exists(sortedSavePath))
             {
-                return new AssetFileInfo
+                return new AssetInfo
                 {
-                    FileName = fileName,
-                    RealFileName = realFileName,
-                    FileSize = new FileInfo(savePath).Length,
-                    RealFileSize = new FileInfo(sortedSavePath).Length,
-                    MirrorSavePath = savePath,
-                    SortedSavePath = sortedSavePath
+                    MirrorFileInfo = new AssetFileInfo
+                    {
+                        Name = fileName,
+                        Size = new FileInfo(savePath).Length,
+                        Path = savePath
+                    },
+                    SortedFileInfo = new AssetFileInfo
+                    {
+                        Name = realFileName,
+                        Size = new FileInfo(sortedSavePath).Length,
+                        Path = sortedSavePath
+                    }
                 };
             }
 
             if (encVersion == AssetCrypt.EncVersion.NoEnc)
             {
                 File.Copy(savePath, sortedSavePath);
-                return new AssetFileInfo
+                return new AssetInfo
                 {
-                    FileName = fileName,
-                    RealFileName = realFileName,
-                    FileSize = new FileInfo(savePath).Length,
-                    RealFileSize = new FileInfo(sortedSavePath).Length,
-                    MirrorSavePath = savePath,
-                    SortedSavePath = sortedSavePath
+                    MirrorFileInfo = new AssetFileInfo
+                    {
+                        Name = fileName,
+                        Size = new FileInfo(savePath).Length,
+                        Path = savePath
+                    },
+                    SortedFileInfo = new AssetFileInfo
+                    {
+                        Name = realFileName,
+                        Size = new FileInfo(sortedSavePath).Length,
+                        Path = sortedSavePath
+                    }
                 };
             }
 
             await AssetCryptHelper.DecryptAsync(savePath, sortedSavePath, encVersion,
                 AssetCryptHelper.IdentifyShouldLz4(realFileName));
-
-            return new AssetFileInfo
+            return new AssetInfo
             {
-                FileName = fileName,
-                RealFileName = realFileName,
-                FileSize = new FileInfo(savePath).Length,
-                RealFileSize = new FileInfo(sortedSavePath).Length,
-                MirrorSavePath = savePath,
-                SortedSavePath = sortedSavePath
+                MirrorFileInfo = new AssetFileInfo
+                {
+                    Name = fileName,
+                    Size = new FileInfo(savePath).Length,
+                    Path = savePath
+                },
+                SortedFileInfo = new AssetFileInfo
+                {
+                    Name = realFileName,
+                    Size = new FileInfo(sortedSavePath).Length,
+                    Path = sortedSavePath
+                }
             };
         }
 
-        protected async Task<AssetFileInfo>
+        protected async Task<AssetInfo>
             DecryptAndSort(string fileName, string savePath, int revision)
         {
             var encVersion = AssetCrypt.IdentifyEncVersion(fileName);
@@ -89,42 +106,60 @@ namespace Seventh.Resource.Services.Abstractions
 
             if (File.Exists(sortedSavePath))
             {
-                return new AssetFileInfo
+                return new AssetInfo
                 {
-                    FileName = fileName,
-                    RealFileName = realFileName,
-                    FileSize = new FileInfo(savePath).Length,
-                    RealFileSize = new FileInfo(sortedSavePath).Length,
-                    MirrorSavePath = savePath,
-                    SortedSavePath = sortedSavePath
+                    MirrorFileInfo = new AssetFileInfo
+                    {
+                        Name = fileName,
+                        Size = new FileInfo(savePath).Length,
+                        Path = savePath
+                    },
+                    SortedFileInfo = new AssetFileInfo
+                    {
+                        Name = realFileName,
+                        Size = new FileInfo(sortedSavePath).Length,
+                        Path = sortedSavePath
+                    }
                 };
             }
 
             if (encVersion == AssetCrypt.EncVersion.NoEnc)
             {
-                File.Copy(savePath, sortedSavePath,true);
-                return new AssetFileInfo
+                File.Copy(savePath, sortedSavePath, true);
+                return new AssetInfo
                 {
-                    FileName = fileName,
-                    RealFileName = realFileName,
-                    FileSize = new FileInfo(savePath).Length,
-                    RealFileSize = new FileInfo(sortedSavePath).Length,
-                    MirrorSavePath = savePath,
-                    SortedSavePath = sortedSavePath
+                    MirrorFileInfo = new AssetFileInfo
+                    {
+                        Name = fileName,
+                        Size = new FileInfo(savePath).Length,
+                        Path = savePath
+                    },
+                    SortedFileInfo = new AssetFileInfo
+                    {
+                        Name = realFileName,
+                        Size = new FileInfo(sortedSavePath).Length,
+                        Path = sortedSavePath
+                    }
                 };
             }
 
             await AssetCryptHelper.DecryptAsync(savePath, sortedSavePath, encVersion,
                 AssetCryptHelper.IdentifyShouldLz4(realFileName));
 
-            return new AssetFileInfo
+            return new AssetInfo
             {
-                FileName = fileName,
-                RealFileName = realFileName,
-                FileSize = new FileInfo(savePath).Length,
-                RealFileSize = new FileInfo(sortedSavePath).Length,
-                MirrorSavePath = savePath,
-                SortedSavePath = sortedSavePath
+                MirrorFileInfo = new AssetFileInfo
+                {
+                    Name = fileName,
+                    Size = new FileInfo(savePath).Length,
+                    Path = savePath
+                },
+                SortedFileInfo = new AssetFileInfo
+                {
+                    Name = realFileName,
+                    Size = new FileInfo(sortedSavePath).Length,
+                    Path = sortedSavePath
+                }
             };
         }
     }

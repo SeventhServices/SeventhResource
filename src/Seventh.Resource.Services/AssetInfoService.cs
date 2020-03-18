@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Seventh.Resource.Common.Crypts;
 using Seventh.Resource.Common.Entities;
@@ -20,8 +22,35 @@ namespace Seventh.Resource.Services
             _pathOption = location.PathOption;
         }
 
-        public async Task<ICollection<AssetFileInfo>> 
-            TryGetFileInfoByRevAsync(int revision)
+        public Task<ICollection<AssetFileInfo>>
+            TryGetFileInfoByClassAsync(string className)
+        {
+            if (className == null) throw new ArgumentNullException(nameof(className));
+            
+            var directory = _pathOption.AssetPath
+                .SortedAssetPath.AppendPath(className);
+            if (!Directory.Exists(directory))
+            {
+                return null;
+            }
+
+            var infos = new List<AssetFileInfo>();
+            var fileInfos = new DirectoryInfo(directory).GetFiles();
+            foreach (var fileInfo in fileInfos)
+            {
+                infos.Add(new AssetFileInfo
+                {
+                    Name = fileInfo.Name,
+                    Revision = ParseRev(fileInfo.Name),
+                    Size = fileInfo.Length,
+                    Path = fileInfo.FullName.Replace(_pathOption.RootPath, string.Empty)
+                });
+            }
+            return Task.FromResult(infos as ICollection<AssetFileInfo>);
+        }
+
+        public async Task<ICollection<AssetInfo>>
+            TryGetAssetInfoByRevAsync(int revision)
         {
             var directory = _pathOption.AssetPath
                 .RevMirrorAssetPath.AppendPath(revision.ToString());
@@ -29,7 +58,7 @@ namespace Seventh.Resource.Services
             {
                 return null;
             }
-            var infos = new List<AssetFileInfo>();
+            var infos = new List<AssetInfo>();
             var fileInfos = new DirectoryInfo(directory).GetFiles();
             long realFileSize = 0;
             foreach (var fileInfo in fileInfos)
@@ -44,22 +73,29 @@ namespace Seventh.Resource.Services
                     realFileSize = new FileInfo(sortedSavePath).Length;
                 }
 
-                infos.Add(new AssetFileInfo
+                infos.Add(new AssetInfo
                 {
-                    FileName = fileName,
-                    RealFileName = realFileName,
-                    Revision = revision,
-                    FileSize = fileInfo.Length,
-                    RealFileSize = realFileSize,
-                    MirrorSavePath = fileInfo.FullName.Replace(_pathOption.RootPath, string.Empty),
-                    SortedSavePath = sortedSavePath?.Replace(_pathOption.RootPath, string.Empty)
+                    MirrorFileInfo = new AssetFileInfo
+                    {
+                        Name = fileName,
+                        Revision = revision,
+                        Size = fileInfo.Length,
+                        Path = fileInfo.FullName.Replace(_pathOption.RootPath, string.Empty)
+                    },
+                    SortedFileInfo = new AssetFileInfo
+                    {
+                        Name = realFileName,
+                        Revision = revision,
+                        Size = realFileSize,
+                        Path = sortedSavePath?.Replace(_pathOption.RootPath, string.Empty)
+                    }
                 });
             }
             return infos;
         }
 
-        public async Task<AssetFileInfo> 
-            TryGetFileInfoAsync(string fileName, 
+        public async Task<AssetInfo>
+            TryGetAssetInfoAsync(string fileName,
                 int? revision = 0, bool needHash = false)
         {
             if (needHash)
@@ -70,9 +106,9 @@ namespace Seventh.Resource.Services
             var isGameMirror = !revision.HasValue;
             long fileSize = 0; long realFileSize = 0;
 
-            var savePath = isGameMirror 
+            var savePath = isGameMirror
                 ? _pathOption.AssetPath.GameMirrorAssetPath.AppendPath(fileName)
-                : _pathOption.AssetPath.RevMirrorAssetPath.AppendPath(revision.Value.ToString(),fileName);
+                : _pathOption.AssetPath.RevMirrorAssetPath.AppendPath(revision.Value.ToString(), fileName);
 
             if (File.Exists(savePath))
             {
@@ -90,16 +126,41 @@ namespace Seventh.Resource.Services
                 realFileSize = new FileInfo(sortedSavePath).Length;
             }
 
-            return new AssetFileInfo
+            var infoRevision = isGameMirror ? 0 : revision.Value;
+            return new AssetInfo
             {
-                FileName = fileName,
-                RealFileName = realFileName,
-                Revision = isGameMirror ? 0 : revision.Value,
-                FileSize = fileSize,
-                RealFileSize = realFileSize,
-                MirrorSavePath = savePath.Replace(_pathOption.RootPath, string.Empty),
-                SortedSavePath = sortedSavePath.Replace(_pathOption.RootPath, string.Empty)
+                MirrorFileInfo = new AssetFileInfo
+                {
+                    Name = fileName,
+                    Revision = infoRevision,
+                    Size = fileSize,
+                    Path = savePath.Replace(_pathOption.RootPath, string.Empty),
+                },
+                SortedFileInfo = new AssetFileInfo
+                {
+                    Name = realFileName,
+                    Revision = infoRevision,
+                    Size = realFileSize,
+                    Path = sortedSavePath?.Replace(_pathOption.RootPath, string.Empty)
+                }
             };
+        }
+
+        private int ParseRev(string fileName)
+        {
+            var revNamePart = Path.GetFileNameWithoutExtension(fileName).Split('_').LastOrDefault();
+            if (revNamePart == null)
+            {
+                return 0;
+            }
+
+            if (revNamePart.StartsWith('r'))
+            {
+                revNamePart = revNamePart.TrimStart('r');
+                return int.TryParse(revNamePart, out int revision) ? revision : 0;
+            }
+
+            return 0;
         }
     }
 }

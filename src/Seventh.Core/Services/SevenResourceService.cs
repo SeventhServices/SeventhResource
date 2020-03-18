@@ -23,24 +23,24 @@ namespace Seventh.Core.Services
             BaseUrl = location.ResourceServiceUrl;
         }
 
-        public async Task<DownloadFileDto> TryDownloadNewFileAsync(string fileName,int revision, bool needHash = false)
+        public async Task<DownloadAssetDto> TryDownloadNewFileAsync(string fileName,int revision, bool needHash = false)
         {
             var queries = new []
             {
                 new KeyValuePair<string, string>(nameof(revision),revision.ToString()),
                 new KeyValuePair<string, string>(nameof(needHash),needHash.ToString()),
             }; 
-            return await _httpExtend.TryJsonGetAsync<DownloadFileDto>(string.Concat(BaseUrl,"file/download/",fileName),queries);
+            return await _httpExtend.TryJsonGetAsync<DownloadAssetDto>(string.Concat(BaseUrl,"file/download/",fileName),queries);
         }
         
-        public async Task<DownloadFileDto> TryDownloadLargeCardAsync(int cardId)
+        public async Task<DownloadAssetDto> TryDownloadLargeCardAsync(int cardId)
         {
-            return await _httpExtend.TryJsonPostAsync<DownloadFileDto>(string.Concat(BaseUrl,"file/download/",cardId.ToString()) );
+            return await _httpExtend.TryJsonPostAsync<DownloadAssetDto>(string.Concat(BaseUrl,"file/download/",cardId.ToString()) );
         }
 
-        public async Task<IEnumerable<DownloadFileDto>> TryDownloadNewFilesAsync(IEnumerable<GetFileDto> dtoList)
+        public async Task<IEnumerable<DownloadAssetDto>> TryDownloadNewFilesAsync(IEnumerable<GetAssetDto> dtoList)
         {
-            return await _httpExtend.TryJsonPostAsync<IEnumerable<GetFileDto>,IEnumerable<DownloadFileDto>>(string.Concat(BaseUrl,"file/download/"),dtoList);
+            return await _httpExtend.TryJsonPostAsync<IEnumerable<GetAssetDto>,IEnumerable<DownloadAssetDto>>(string.Concat(BaseUrl,"file/download/"),dtoList);
         }
 
         public async Task<RefreshedDownloadUrlDto> UpdateDownloadUrl()

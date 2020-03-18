@@ -21,7 +21,7 @@ namespace Seventh.Resource.Services
             _client = client.Client;
         }
 
-        public async Task<(bool result, AssetFileInfo info)>
+        public async Task<(bool result, AssetInfo info)>
             TryDownloadLargeCard(int cardId)
         {
             var fileName = FileNameConverter.ToLargeCardFile(cardId);
@@ -30,7 +30,7 @@ namespace Seventh.Resource.Services
             return await TryDownloadAtMirrorAndSortAsync(url,fileName);
         }
 
-        public async Task<(bool result, AssetFileInfo info)>
+        public async Task<(bool result, AssetInfo info)>
             TryDownloadAtMirrorAndSortAsync(string url, string fileName)
         {
             var (result, savePath) = await TryDownloadAtMirrorAsync(url,fileName);
@@ -40,9 +40,9 @@ namespace Seventh.Resource.Services
             }
             
             var info = await DecryptAndSort(fileName, string.Concat(LocalPathOption.RootPath, savePath));
-            info.Revision = 0;
-            info.MirrorSavePath = info.MirrorSavePath.Replace(LocalPathOption.RootPath, string.Empty);
-            info.SortedSavePath = info.SortedSavePath.Replace(LocalPathOption.RootPath, string.Empty);
+            info.SetRevision(0);
+            info.MirrorFileInfo.Path = info.MirrorFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
+            info.SortedFileInfo.Path = info.SortedFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
             return (true,info);
         }
 

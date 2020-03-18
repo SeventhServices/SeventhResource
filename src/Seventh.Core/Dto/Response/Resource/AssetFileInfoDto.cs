@@ -1,13 +1,16 @@
-﻿namespace Seventh.Core.Dto.Response.Resource
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Seventh.Core.Dto.Response.Resource
 {
     public class AssetFileInfoDto
     {
-        public string FileName { get; set; }
-        public string RealFileName { get; set; }
+        public string Name { get; set; }
         public int Revision { get; set; }
-        public long FileSize { get; set; }
-        public long RealFileSize { get; set; }
-        public string MirrorUrl { get; set; }
-        public string SortedUrl { get; set; }
+        public long Size { get; set; }
+        public string Extension { get; set; }
+        public string Url { get; set; }
+        public bool IsExist { get; set;}
     }
 }

@@ -14,20 +14,24 @@ variables:
 
 steps:
 - task : UseDotNet@2
+  displayName: Use dotnet-sdk-5.0.100-preview.1.20155.7
   inputs:
-    packageType: 'sdk'
-    version: '3.1.100'
+        packageType: 'sdk'
+        version: '5.0.100-preview.1.20155.7'
 
 - task: DotNetCoreCLI@2
+  displayName: Build projects
   inputs:
     command: 'build'
     arguments: '-c $(buildConfiguration)'
     
 - task: DotNetCoreCLI@2
+  displayName: Test projects
   inputs:
     command: 'test'
     
 - task: DotNetCoreCLI@2
+  displayName: Pack packages
   inputs:
     command: 'pack'
     configuration: $(buildConfiguration)
@@ -39,6 +43,7 @@ steps:
     patchVersion: $(Patch)
 
 - task: PublishBuildArtifacts@1
+  displayName: Push packages to drop
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop-github-ci'

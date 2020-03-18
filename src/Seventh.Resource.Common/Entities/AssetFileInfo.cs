@@ -1,13 +1,14 @@
-﻿namespace Seventh.Resource.Common.Entities
+﻿using System.Drawing;
+
+namespace Seventh.Resource.Common.Entities
 {
     public class AssetFileInfo
     {
-        public string FileName { get; set; }
-        public string RealFileName { get; set; }
+        public string Name { get; set; }
         public int Revision { get; set; }
-        public long FileSize { get; set; }
-        public long RealFileSize { get; set; }
-        public string MirrorSavePath { get; set; }
-        public string SortedSavePath { get; set; }
+        public string Extension => System.IO.Path.GetExtension(Name);
+        public long Size { get; set; }
+        public string Path { get; set; }
+        public bool IsExist => Size != 0;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Seventh.Core.Dto.Request.Resource
 {
-    public class GetFileDto : GetFileDtoParams
+    public class GetAssetDto : GetAssetParamsDto
     {
         [Required]
         [RegularExpression("^.*\\..*$")]
