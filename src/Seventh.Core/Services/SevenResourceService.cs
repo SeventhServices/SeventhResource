@@ -30,17 +30,17 @@ namespace Seventh.Core.Services
                 new KeyValuePair<string, string>(nameof(revision),revision.ToString()),
                 new KeyValuePair<string, string>(nameof(needHash),needHash.ToString()),
             }; 
-            return await _httpExtend.TryJsonGetAsync<DownloadAssetDto>(string.Concat(BaseUrl,"file/download/",fileName),queries);
+            return await _httpExtend.TryJsonGetAsync<DownloadAssetDto>(string.Concat(BaseUrl,"asset/download/",fileName),queries);
         }
         
         public async Task<DownloadAssetDto> TryDownloadLargeCardAsync(int cardId)
         {
-            return await _httpExtend.TryJsonPostAsync<DownloadAssetDto>(string.Concat(BaseUrl,"file/download/",cardId.ToString()) );
+            return await _httpExtend.TryJsonPostAsync<DownloadAssetDto>(string.Concat(BaseUrl,"asset/download/",cardId.ToString()) );
         }
 
         public async Task<IEnumerable<DownloadAssetDto>> TryDownloadNewFilesAsync(IEnumerable<GetAssetDto> dtoList)
         {
-            return await _httpExtend.TryJsonPostAsync<IEnumerable<GetAssetDto>,IEnumerable<DownloadAssetDto>>(string.Concat(BaseUrl,"file/download/"),dtoList);
+            return await _httpExtend.TryJsonPostAsync<IEnumerable<GetAssetDto>,IEnumerable<DownloadAssetDto>>(string.Concat(BaseUrl,"asset/download/"),dtoList);
         }
 
         public async Task<RefreshedDownloadUrlDto> UpdateDownloadUrl()

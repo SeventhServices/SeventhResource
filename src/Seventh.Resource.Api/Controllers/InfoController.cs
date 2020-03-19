@@ -8,8 +8,6 @@ using Seventh.Core.Dto.Request.Resource;
 using Seventh.Core.Services;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using Seventh.Resource.Common.Entities;
 
 namespace Seventh.Resource.Api.Controllers
 {
@@ -27,8 +25,9 @@ namespace Seventh.Resource.Api.Controllers
         }
 
         [ResponseCache(Duration = 10)]
-        [HttpHead("class/{**className}")]
-        [HttpGet("class/{**className}")]
+        [HttpHead("class/{**className}", Name = nameof(GetFileInfoByClass))]
+        [HttpGet("class/{**className}", Name = nameof(GetFileInfoByClass))]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<ICollection<AssetInfoDto>>>
             GetFileInfoByClass([Required] string className,
             [FromQuery] QueryFileParamsDto queryDto)
@@ -50,10 +49,11 @@ namespace Seventh.Resource.Api.Controllers
         }
 
         [ResponseCache(Duration = 10)]
-        [HttpGet("revison/{revision}")]
-        [HttpHead("revison/{revision}")]
+        [HttpHead("revision/{revision}", Name = nameof(GetAssetInfoByRev))]
+        [HttpGet("revision/{revision}", Name = nameof(GetAssetInfoByRev))]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<ICollection<AssetInfoDto>>>
-            GetFileInfoByRev([Required] int revision,
+            GetAssetInfoByRev([Required] int revision,
             [FromQuery] QueryAssetParamsDto queryDto)
         {
             var infos = await _infoService
@@ -73,9 +73,10 @@ namespace Seventh.Resource.Api.Controllers
         }
 
         [ResponseCache(Duration = 120)]
-        [HttpHead("file/{fileName}")]
-        [HttpGet("file/{fileName}")]
-        public async Task<ActionResult<AssetInfoDto>> GetFileInfo(
+        [HttpHead("file/{fileName}", Name = nameof(GetAssetInfo))]
+        [HttpGet("file/{fileName}", Name = nameof(GetAssetInfo))]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<AssetInfoDto>> GetAssetInfo(
             [RegularExpression("^.*\\..*$")] [Required] string fileName,
             [FromQuery] GetAssetParamsDto dto)
         {

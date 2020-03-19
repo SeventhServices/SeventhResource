@@ -21,11 +21,11 @@ namespace Seventh.Resource.Api.Controllers
             _location = location;
         }
 
-        [HttpPut("{DownloadUrl}")]
+        [HttpPut("downloadUrl", Name = nameof(UpdateDownloadUrl))]
         public IActionResult UpdateDownloadUrl(
             [FromBody] UpdateDownloadUrlDto dto)
         {
-            _location.DownloadUrl = dto.DownloadUrl;
+            _location.DownloadUrl = dto.Url;
 
             return Ok(new RefreshedDownloadUrlDto
             {
@@ -34,8 +34,9 @@ namespace Seventh.Resource.Api.Controllers
             });
         }
 
-        [HttpPost("{DownloadUrl}")]
-        public async Task<IActionResult> UpdateDownloadUrl()
+        [HttpPost("downloadUrl", Name = nameof(CheckAndUpdateDownloadUrl))]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> CheckAndUpdateDownloadUrl()
         {
             var info = await _statusService.TryGetVersionInfoAsync();
 

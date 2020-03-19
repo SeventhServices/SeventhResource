@@ -6,6 +6,6 @@ namespace Seventh.Core.Dto.Request.Resource
     public class UpdateDownloadUrlDto
     {
         [Required]
-        public string DownloadUrl { get; set; }
+        public string Url { get; set; }
     }
 }

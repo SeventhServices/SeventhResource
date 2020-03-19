@@ -13,6 +13,7 @@ using Seventh.Resource.Services;
 namespace Seventh.Resource.Api.Controllers
 {
     [ApiController]
+    [ResponseCache(Duration = 120)]
     [Route("[controller]")]
     public class AssetController : Controller
     {
@@ -31,9 +32,12 @@ namespace Seventh.Resource.Api.Controllers
             _downloadService = downloadService;
             _queueDownloadService = queueDownloadService;
         }
-        [HttpPost("download/card/{cardId}")]
+
         [ResponseCache(Duration = 120)]
-        public async Task<ActionResult<DownloadAssetDto>> TryGetDownloadLargeCard(
+        [HttpPost("download/card/{cardId}", Name = nameof(TryDownloadLargeCard))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<DownloadAssetDto>> TryDownloadLargeCard(
              [FromServices] OneByOneDownloadService downloadService, int cardId)
         {
 
@@ -57,10 +61,12 @@ namespace Seventh.Resource.Api.Controllers
             return Ok(downloadFileDto);
         }
 
-        [HttpPost("download")]
         [ResponseCache(Duration = 1800)]
+        [HttpPost("download", Name = nameof(TryDownloadAssets))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<IEnumerable<DownloadAssetDto>>>
-            TryDownloadFiles([FromBody] IEnumerable<GetAssetDto> dtoList)
+            TryDownloadAssets([FromBody] IEnumerable<GetAssetDto> dtoList)
         {
             var downloadFiles = new List<DownloadAssetDto>();
 
@@ -146,9 +152,11 @@ namespace Seventh.Resource.Api.Controllers
             return Ok(downloadFiles);
         }
 
-        [HttpPost("download/{fileName}")]
         [ResponseCache(Duration = 120)]
-        public async Task<ActionResult<DownloadAssetDto>> TryGetDownloadFile(
+        [HttpPost("download/{fileName}", Name = nameof(TryGetDownloadAsset))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<DownloadAssetDto>> TryGetDownloadAsset(
             [RegularExpression("^.*\\..*$")] [Required] string fileName,
             [FromBody] GetAssetParamsDto dto)
         {

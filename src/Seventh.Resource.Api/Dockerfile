@@ -1,11 +1,11 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:5.0-alpine AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:5.0-alpine AS build
 WORKDIR /src
 COPY ["src/Seventh.Resource.Api/Seventh.Resource.Api.csproj", "src/Seventh.Resource.Api/"]
 COPY ["src/Seventh.Resource/Seventh.Resource.csproj", "src/Seventh.Resource/"]

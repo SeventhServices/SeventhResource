@@ -6,14 +6,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Seventh.Resource.Common.Options;
 using Seventh.Resource.Common.Entities;
 using Seventh.Core.Dto.Response.Resource;
 using Seventh.Core.Utilities;
 using Seventh.Core;
 using Mapster;
-using System.Net.Http;
-using Microsoft.OpenApi.Models;
+using System.Security.Authentication;
+using Seventh.Resource.Api.OpenApi;
 
 namespace Seventh.Resource.Api
 {
@@ -49,6 +50,7 @@ namespace Seventh.Resource.Api
                 });
                 setup.CustomOperationIds(description => description.RelativePath);
                 setup.CustomSchemaIds(type => type.FullName);
+                setup.OperationFilter<RemoveTextResponsesOperationFilter>();
             });
         }
 
@@ -109,7 +111,7 @@ namespace Seventh.Resource.Api
                 }
 
             }
-            catch (Exception e)
+            catch (AuthenticationException e)
             {
                 Console.WriteLine(e);
             }
