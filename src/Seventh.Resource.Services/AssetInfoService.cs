@@ -22,16 +22,31 @@ namespace Seventh.Resource.Services
             _pathOption = location.PathOption;
         }
 
+        public Task<ICollection<string>>
+            TryGetAllClassNamesAsync()
+        {
+            var directory = _pathOption.AssetPath
+                .SortedAssetPath;
+            if (!Directory.Exists(directory))
+            {
+                return null;
+            }
+
+            var classNameList = new List<string>();
+            AddAllClassName(classNameList,new DirectoryInfo(directory));
+            return Task.FromResult(classNameList as ICollection<string>);
+        }
+
         public Task<ICollection<AssetFileInfo>>
             TryGetFileInfoByClassAsync(string className)
         {
             if (className == null) throw new ArgumentNullException(nameof(className));
-            
+
             var directory = _pathOption.AssetPath
                 .SortedAssetPath.AppendPath(className);
             if (!Directory.Exists(directory))
             {
-                return null;
+                return Task.FromResult<ICollection<AssetFileInfo>>(null);
             }
 
             var infos = new List<AssetFileInfo>();
@@ -161,6 +176,21 @@ namespace Seventh.Resource.Services
             }
 
             return 0;
+        }
+
+        private void AddAllClassName(ICollection<string> classNameList,
+            DirectoryInfo baseDirectoryInfo)
+        {
+            var infos = baseDirectoryInfo.GetDirectories();
+            while (infos.Length != 0)
+            {
+                foreach (var info in infos)
+                {
+                    classNameList.Add(info.FullName.Replace(string.Concat(_pathOption.AssetPath.SortedAssetPath,Path.DirectorySeparatorChar), string.Empty));
+                    AddAllClassName(classNameList, info);
+                }
+                infos = Array.Empty<DirectoryInfo>();
+            }
         }
     }
 }

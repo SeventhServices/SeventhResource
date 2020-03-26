@@ -13,7 +13,11 @@ namespace Seventh.Core.Utilities
                 StringSplitOptions.RemoveEmptyEntries);
             var fileName = directories.Last();
             var url = directories.SkipLast(1).Select( 
-                d => d.ToLowerInvariant());
+                d => d.ToLowerInvariant()).ToArray();
+            if (url.Length == 0)
+            {
+                return string.Concat(baseUrl,fileName); 
+            }
             return string.Concat(baseUrl,string.Join("/", url),"/",fileName); 
         }
     }

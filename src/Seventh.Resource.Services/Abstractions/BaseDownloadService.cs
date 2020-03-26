@@ -102,9 +102,10 @@ namespace Seventh.Resource.Services.Abstractions
         {
             var encVersion = AssetCrypt.IdentifyEncVersion(fileName);
             var realFileName = AssetCryptHelper.Rename(fileName, encVersion);
-            var sortedSavePath = await _sortService.SortAsync(realFileName, revision);
+            var sortedSavePath = await _sortService.SortAsync(realFileName);
+            var revSortedSavePath = await _sortService.SortAsync(realFileName, revision);
 
-            if (File.Exists(sortedSavePath))
+            if (File.Exists(revSortedSavePath))
             {
                 return new AssetInfo
                 {
@@ -117,8 +118,8 @@ namespace Seventh.Resource.Services.Abstractions
                     SortedFileInfo = new AssetFileInfo
                     {
                         Name = realFileName,
-                        Size = new FileInfo(sortedSavePath).Length,
-                        Path = sortedSavePath
+                        Size = new FileInfo(revSortedSavePath).Length,
+                        Path = revSortedSavePath
                     }
                 };
             }
@@ -146,6 +147,11 @@ namespace Seventh.Resource.Services.Abstractions
             await AssetCryptHelper.DecryptAsync(savePath, sortedSavePath, encVersion,
                 AssetCryptHelper.IdentifyShouldLz4(realFileName));
 
+            if (!revSortedSavePath.Equals(sortedSavePath))
+            {
+                File.Copy(sortedSavePath, revSortedSavePath, true);
+            }
+
             return new AssetInfo
             {
                 MirrorFileInfo = new AssetFileInfo
@@ -157,8 +163,8 @@ namespace Seventh.Resource.Services.Abstractions
                 SortedFileInfo = new AssetFileInfo
                 {
                     Name = realFileName,
-                    Size = new FileInfo(sortedSavePath).Length,
-                    Path = sortedSavePath
+                    Size = new FileInfo(revSortedSavePath).Length,
+                    Path = revSortedSavePath
                 }
             };
         }

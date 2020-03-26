@@ -8,6 +8,9 @@ using Seventh.Core.Dto.Request.Resource;
 using Seventh.Core.Services;
 using System.Collections.Generic;
 using System.Linq;
+using Seventh.Core.Utilities;
+using System.IO;
+using System;
 
 namespace Seventh.Resource.Api.Controllers
 {
@@ -22,6 +25,27 @@ namespace Seventh.Resource.Api.Controllers
         {
             _resourceService = resourceService;
             _infoService = infoService;
+        }
+
+        [ResponseCache(Duration = 10)]
+        [HttpHead("classes", Name = nameof(GetAllClasses))]
+        [HttpGet("classes", Name = nameof(GetAllClasses))]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<ICollection<string>>> GetAllClasses()
+        {
+            var classNames = await _infoService
+                .TryGetAllClassNamesAsync();
+
+            if (classNames == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(classNames.Select(c => new{
+                Name = c.Replace(Path.DirectorySeparatorChar,'/'),
+                Url = UrlUtil.MakeFileUrl(string.Concat(
+                    _resourceService.BaseUrl,"info/class/"),c)
+            }));
         }
 
         [ResponseCache(Duration = 10)]

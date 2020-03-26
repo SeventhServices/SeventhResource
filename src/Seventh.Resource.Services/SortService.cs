@@ -39,7 +39,7 @@ namespace Seventh.Resource.Services
 
         public ValueTask<string> SortAsync(string fileName, int revision)
         {
-            return SortAsync(RenameForRevSpec(fileName,revision));
+            return SortAsync(RenameForRevSpec(fileName, revision));
         }
 
         public string RenameForRevSpec(string fileName,int revision)
