@@ -5,18 +5,18 @@
         public int CharacterId { get; set; }
         public string CharacterName { get; set; }
         public string FirstName { get; set; }
-        public string CharaNormalImageId { get; set; }
+        public int CharaNormalImageId { get; set; }
         public string Nickname { get; set; }
         public string SortName { get; set; }
-        public string Age { get; set; }
-        public string Height { get; set; }
-        public string Weight { get; set; }
+        public int Age { get; set; }
+        public int Height { get; set; }
+        public int Weight { get; set; }
         public string Bust { get; set; }
         public string Waist { get; set; }
         public string Hips { get; set; }
         public string Cup { get; set; }
-        public string BirthMonth { get; set; }
-        public string Birthday { get; set; }
+        public int BirthMonth { get; set; }
+        public int Birthday { get; set; }
         public string Constellation { get; set; }
         public string BloodType { get; set; }
         public string SpecialAbility { get; set; }
@@ -26,6 +26,6 @@
         public string EpisodeSortId { get; set; }
         public int SegmentId { get; set; }
         public string EnglishName { get; set; }
-        public string DeleteFlg { get; set; }
+        public bool DeleteFlg { get; set; }
     }
 }

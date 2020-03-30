@@ -56,7 +56,7 @@ namespace Seventh.Resource.Services
                 infos.Add(new AssetFileInfo
                 {
                     Name = fileInfo.Name,
-                    Revision = ParseRev(fileInfo.Name),
+                    Revision = FileNameHelper.ParseRev(fileInfo.Name),
                     Size = fileInfo.Length,
                     Path = fileInfo.FullName.Replace(_pathOption.RootPath, string.Empty)
                 });
@@ -159,23 +159,6 @@ namespace Seventh.Resource.Services
                     Path = sortedSavePath?.Replace(_pathOption.RootPath, string.Empty)
                 }
             };
-        }
-
-        private int ParseRev(string fileName)
-        {
-            var revNamePart = Path.GetFileNameWithoutExtension(fileName).Split('_').LastOrDefault();
-            if (revNamePart == null)
-            {
-                return 0;
-            }
-
-            if (revNamePart.StartsWith('r'))
-            {
-                revNamePart = revNamePart.TrimStart('r');
-                return int.TryParse(revNamePart, out int revision) ? revision : 0;
-            }
-
-            return 0;
         }
 
         private void AddAllClassName(ICollection<string> classNameList,
