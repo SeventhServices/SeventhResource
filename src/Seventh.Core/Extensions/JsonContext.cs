@@ -5,7 +5,7 @@ namespace System.Net.Http
 {
     public class JsonContext : StringContent
     {
-        public JsonContext(string jsonContent) : base(jsonContent,Encoding.UTF8, "application/json")
+        public JsonContext(string jsonContent) : base(jsonContent, Encoding.UTF8, "application/json")
         {
         }
 

@@ -7,17 +7,17 @@ using Seventh.Core.Abstractions.Extend;
 
 namespace Seventh.Core.Extend
 {
-    public class JsonHttpExtend : HttpExtend,IJsonHttpExtend
+    public class JsonHttpExtend : HttpExtend, IJsonHttpExtend
     {
         private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-        public JsonHttpExtend(IHttpClientFactory clientFactory, JsonSerializerOptions jsonSerializerOptions) 
+        public JsonHttpExtend(IHttpClientFactory clientFactory, JsonSerializerOptions jsonSerializerOptions)
             : base(clientFactory)
         {
             _jsonSerializerOptions = jsonSerializerOptions;
         }
 
-        public async Task<TResponseDto> TryJsonGetAsync<TResponseDto>(string url) 
+        public async Task<TResponseDto> TryJsonGetAsync<TResponseDto>(string url)
             where TResponseDto : class
         {
             var (result, response) = await TryGetAsync(url);
@@ -36,8 +36,8 @@ namespace Seventh.Core.Extend
             {
                 var queryArray = querys.ToArray();
                 queryString = string.Join("&",
-                    queryArray.Select( q => 
-                        string.Concat(q.Key,"=",q.Value)));
+                    queryArray.Select(q =>
+                       string.Concat(q.Key, "=", q.Value)));
             }
             var (result, response) = await TryGetAsync(string.Concat(url, "?", queryString));
             if (!result)
@@ -47,7 +47,7 @@ namespace Seventh.Core.Extend
             return await DeserializeJsonContextAsync<TResponseDto>(response);
         }
 
-        public async Task<TResponseDto> TryJsonPostAsync<TResponseDto>(string url) 
+        public async Task<TResponseDto> TryJsonPostAsync<TResponseDto>(string url)
             where TResponseDto : class
         {
             var (result, response) = await TryPostAsync(url);
@@ -58,12 +58,12 @@ namespace Seventh.Core.Extend
             return await DeserializeJsonContextAsync<TResponseDto>(response);
         }
 
-        public async Task<TResponseDto> TryJsonPostAsync<TRequestDto, TResponseDto>(string url, TRequestDto body) 
-            where TRequestDto : class 
+        public async Task<TResponseDto> TryJsonPostAsync<TRequestDto, TResponseDto>(string url, TRequestDto body)
+            where TRequestDto : class
             where TResponseDto : class
         {
             var jsonContext = new JsonContext(JsonSerializer.Serialize(body, _jsonSerializerOptions));
-            var (result, response) = await TryPostAsync(url,jsonContext);
+            var (result, response) = await TryPostAsync(url, jsonContext);
             if (!result)
             {
                 return null;
@@ -74,7 +74,7 @@ namespace Seventh.Core.Extend
         private async Task<TResponseDto> DeserializeJsonContextAsync<TResponseDto>(HttpResponseMessage response)
             where TResponseDto : class
         {
-            return await JsonSerializer.DeserializeAsync<TResponseDto>(await response.Content.ReadAsStreamAsync(),_jsonSerializerOptions);
+            return await JsonSerializer.DeserializeAsync<TResponseDto>(await response.Content.ReadAsStreamAsync(), _jsonSerializerOptions);
         }
     }
 }

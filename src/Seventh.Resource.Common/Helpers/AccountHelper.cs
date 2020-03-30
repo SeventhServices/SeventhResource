@@ -21,21 +21,21 @@ namespace Seventh.Resource.Common.Helpers
 
             var savePath = saveDirectory
                 .AppendAndCreatePath(account.Pid)
-                .AppendPath(accountFileType == AccountFileType.Json 
+                .AppendPath(accountFileType == AccountFileType.Json
                     ? $"{account.Pid}.json" : KcFileName);
 
             ConvertToFile(account, savePath);
             return savePath;
         }
 
-        public static void ConvertToFile(Account account, string savePath, 
+        public static void ConvertToFile(Account account, string savePath,
             AccountFileType accountFileType = AccountFileType.Kc)
         {
             if (account == null) throw new ArgumentNullException(nameof(account));
 
             if (accountFileType == AccountFileType.Json)
             {
-                File.WriteAllText(savePath,JsonSerializer.Serialize(account));
+                File.WriteAllText(savePath, JsonSerializer.Serialize(account));
             }
             var accountDataFile = new FileDictionary(savePath)
             {

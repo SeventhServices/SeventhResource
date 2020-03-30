@@ -1,9 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Serialization;
-using Seventh.Resource.Services;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Seventh.Resource.Services;
 using Xunit;
 
 namespace Seventh.Resource.ServicesTests
@@ -30,7 +29,7 @@ namespace Seventh.Resource.ServicesTests
         public async Task ShouldDownloadLargeCard()
         {
             var oneByOneDownloadService = _services.CreateScope().ServiceProvider.GetService<OneByOneDownloadService>();
-            var (result,info) = await oneByOneDownloadService.TryDownloadLargeCard(4000);
+            var (result, info) = await oneByOneDownloadService.TryDownloadLargeCard(4000);
             Assert.True(result);
         }
     }

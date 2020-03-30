@@ -1,16 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using Seventh.Core.Dto.Response.Resource;
-using Seventh.Resource.Services;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
+using Microsoft.AspNetCore.Mvc;
 using Seventh.Core.Dto.Request.Resource;
+using Seventh.Core.Dto.Response.Resource;
 using Seventh.Core.Services;
-using System.Collections.Generic;
-using System.Linq;
 using Seventh.Core.Utilities;
-using System.IO;
-using System;
+using Seventh.Resource.Services;
 
 namespace Seventh.Resource.Api.Controllers
 {
@@ -41,10 +40,11 @@ namespace Seventh.Resource.Api.Controllers
                 return NotFound();
             }
 
-            return Ok(classNames.Select(c => new{
-                Name = c.Replace(Path.DirectorySeparatorChar,'/'),
+            return Ok(classNames.Select(c => new
+            {
+                Name = c.Replace(Path.DirectorySeparatorChar, '/'),
                 Url = UrlUtil.MakeFileUrl(string.Concat(
-                    _resourceService.BaseUrl,"info/class/"),c)
+                    _resourceService.BaseUrl, "info/class/"), c)
             }));
         }
 

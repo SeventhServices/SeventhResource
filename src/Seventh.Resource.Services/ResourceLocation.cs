@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Seventh.Resource.Common.Options;
+﻿using Seventh.Resource.Common.Options;
 using Seventh.Resource.Common.Utilities;
 using PathOption = Seventh.Resource.Common.Options.PathOption;
 

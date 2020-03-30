@@ -13,7 +13,7 @@ namespace Seventh.Resource.Common.Extensions
             }
             foreach (var item in self) action(item);
         }
-        
+
 
     }
 }

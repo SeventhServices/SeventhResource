@@ -10,7 +10,6 @@ namespace Seventh.Resource.Services
 {
     public static class ServiceExtension
     {
-
         public static ResourceLocation UseStatusOptions(this ResourceLocation optionService, ResourceOption options)
         {
             if (options.PathOption == null)
@@ -38,7 +37,7 @@ namespace Seventh.Resource.Services
 
         public static ResourceLocation ConfigureLocation(this ResourceLocation optionService)
         {
-            return ConfigureLocation(optionService, o => {});
+            return ConfigureLocation(optionService, o => { });
         }
     }
 }

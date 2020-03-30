@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Seventh.Resource.Common.Entities
+﻿namespace Seventh.Resource.Common.Entities
 {
     public class AssetInfo
     {

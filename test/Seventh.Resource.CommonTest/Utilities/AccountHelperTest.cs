@@ -12,7 +12,7 @@ namespace Seventh.Resource.CommonTest.Utilities
         public void ShouldConvert()
         {
             var uuid = Guid.NewGuid();
-            
+
             var filePath = AccountHelper.GetExportAccountFilePath("7901801", "");
 
             if (File.Exists(filePath))

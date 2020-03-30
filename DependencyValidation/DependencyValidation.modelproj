@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{cc318ce6-f5b7-474c-bd82-e34ba367ab53}</ProjectGuid>
+    <ArchitectureToolsVersion>2.0.0.0</ArchitectureToolsVersion>
+    <Name>DependencyValidation</Name>
+    <RootNamespace>DependencyValidation</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Validate Include="DependencyValidation.layerdiagram">
+      <SubType>Content</SubType>
+    </Validate>
+    <Validate Include="DependencyValidation.layerdiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>DependencyValidation.layerdiagram</DependentUpon>
+    </Validate>
+    <Validate Include="DependencyValidation.layerdiagram.suppressions">
+      <SubType>Content</SubType>
+      <DependentUpon>DependencyValidation.layerdiagram</DependentUpon>
+    </Validate>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\src\Seventh.Core\Seventh.Core.csproj">
+      <Name>Seventh.Core</Name>
+      <Project>{237ce80c-df11-44f8-8a31-f17f35b82177}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\src\Seventh.Resource.Api.Data\Seventh.Resource.Api.Data.csproj">
+      <Name>Seventh.Resource.Api.Data</Name>
+      <Project>{33bd83a0-3913-43ec-adc6-1341bf6b3fcf}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\src\Seventh.Resource.Api\Seventh.Resource.Api.csproj">
+      <Name>Seventh.Resource.Api</Name>
+      <Project>{10f13dab-bfb0-474d-abef-7cced8cf4a8f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\src\Seventh.Resource.Common\Seventh.Resource.Common.csproj">
+      <Name>Seventh.Resource.Common</Name>
+      <Project>{303414c4-e248-4640-822a-a16a5322ffbe}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\src\Seventh.Resource.Database\Seventh.Resource.Data.csproj">
+      <Name>Seventh.Resource.Data</Name>
+      <Project>{7769240b-8479-48b8-9052-01ee04de9d0f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\src\Seventh.Resource.Services\Seventh.Resource.Services.csproj">
+      <Name>Seventh.Resource.Services</Name>
+      <Project>{005f61de-b490-4aee-bdf4-87deac119f72}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\src\Seventh.Resource\Seventh.Resource.csproj">
+      <Name>Seventh.Resource</Name>
+      <Project>{aa9c3c3b-162e-45f1-9d5e-60a772865bcd}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\test\Seventh.Resource.CommonTest\Seventh.Resource.CommonTest.csproj">
+      <Name>Seventh.Resource.CommonTest</Name>
+      <Project>{6a0d78a8-892f-485a-ac0f-04d1a1f29d53}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\test\Seventh.Resource.DatabaseTest\Seventh.Resource.DatabaseTest.csproj">
+      <Name>Seventh.Resource.DatabaseTest</Name>
+      <Project>{c9f89421-8990-41fd-8811-b1a0904a216b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\test\Seventh.Resource.ServicesTests\Seventh.Resource.ServicesTests.csproj">
+      <Name>Seventh.Resource.ServicesTests</Name>
+      <Project>{321a5dcd-8dcc-4e21-8264-c635fade5bd2}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VSToolsPath)\ArchitectureTools\Microsoft.VisualStudio.TeamArchitect.ModelingProject.targets" Condition="'$(VSToolsPath)' != ''" />
+</Project>

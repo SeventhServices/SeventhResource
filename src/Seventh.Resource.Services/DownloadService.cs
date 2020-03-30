@@ -13,8 +13,8 @@ namespace Seventh.Resource.Services
     {
         private readonly HttpClient _client;
 
-        public DownloadService(DownloadClient client, SortService sortService, ResourceLocation location) 
-            : base(sortService,location)
+        public DownloadService(DownloadClient client, SortService sortService, ResourceLocation location)
+            : base(sortService, location)
         {
             _client = client.Client;
         }
@@ -53,12 +53,12 @@ namespace Seventh.Resource.Services
             {
                 return (false, null);
             }
-            
+
             var info = await DecryptAndSort(fileName, string.Concat(LocalPathOption.RootPath, savePath));
             info.SetRevision(0);
             info.MirrorFileInfo.Path = info.MirrorFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
             info.SortedFileInfo.Path = info.SortedFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
-            return (true,info);
+            return (true, info);
         }
 
         public async Task<(bool result, string savePath)>
@@ -74,14 +74,14 @@ namespace Seventh.Resource.Services
 
             if (File.Exists(savePath))
             {
-                return (true, savePath.Replace(LocalPathOption.RootPath,string.Empty));
+                return (true, savePath.Replace(LocalPathOption.RootPath, string.Empty));
             }
 
             var response = await _client.GetAsync(fileName);
             return !response.IsSuccessStatusCode
                 ? (false, null)
                 : (true, (await SaveFile(fileName, savePath, response))
-                    .Replace(LocalPathOption.RootPath,string.Empty));
+                    .Replace(LocalPathOption.RootPath, string.Empty));
         }
 
         public async Task<(bool result, string savePath)>
@@ -96,26 +96,26 @@ namespace Seventh.Resource.Services
 
             if (File.Exists(savePath))
             {
-                return (true, savePath.Replace(LocalPathOption.RootPath,string.Empty));
+                return (true, savePath.Replace(LocalPathOption.RootPath, string.Empty));
             }
 
             var response = await _client.GetAsync(fileName);
             return !response.IsSuccessStatusCode
                 ? (false, null)
                 : (true, (await SaveFile(fileName, savePath, response))
-                    .Replace(LocalPathOption.RootPath,string.Empty));
+                    .Replace(LocalPathOption.RootPath, string.Empty));
         }
 
-        public async Task<(bool result, long? Length)> 
+        public async Task<(bool result, long? Length)>
             TryGetContentLengthAsync(string fileName)
         {
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri(fileName, UriKind.RelativeOrAbsolute) ,
+                RequestUri = new Uri(fileName, UriKind.RelativeOrAbsolute),
                 Method = HttpMethod.Head
             };
 
-            var response = await _client.SendAsync(request,HttpCompletionOption.ResponseHeadersRead)
+            var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead)
                 .ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
@@ -126,7 +126,7 @@ namespace Seventh.Resource.Services
             return (true, response.Content.Headers.ContentLength);
         }
 
-        public async Task<(bool result ,bool pass)> TryUsePolicyAsync(string fileName, bool needHash, long maxLength, bool whenLengthNull = true)
+        public async Task<(bool result, bool pass)> TryUsePolicyAsync(string fileName, bool needHash, long maxLength, bool whenLengthNull = true)
         {
             if (needHash)
             {
@@ -137,7 +137,7 @@ namespace Seventh.Resource.Services
 
             if (!result) return (false, false);
 
-            return length == null ? (true, false) : (true,!(length > maxLength));
+            return length == null ? (true, false) : (true, !(length > maxLength));
         }
 
         //public async Task DownloadCard(int cardId, FileSizeVersion sizeVersion = FileSizeVersion.Large)

@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace Seventh.Resource.Common.Entities
+﻿namespace Seventh.Resource.Common.Entities
 {
     public class AssetFileInfo
     {

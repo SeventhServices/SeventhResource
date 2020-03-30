@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
-using Seventh.Resource.Common.Extensions;
 using Seventh.Resource.Common.Utilities;
 
 namespace Seventh.Resource.Services
@@ -34,7 +26,7 @@ namespace Seventh.Resource.Services
         public ValueTask<string> SortAsync(string fileName)
         {
             return new ValueTask<string>(ProvideExtendPath(
-                new StringBuilder(_location.PathOption.AssetPath.SortedAssetPath),fileName));
+                new StringBuilder(_location.PathOption.AssetPath.SortedAssetPath), fileName));
         }
 
         public ValueTask<string> SortAsync(string fileName, int revision)
@@ -42,27 +34,27 @@ namespace Seventh.Resource.Services
             return SortAsync(RenameForRevSpec(fileName, revision));
         }
 
-        public string RenameForRevSpec(string fileName,int revision)
+        public string RenameForRevSpec(string fileName, int revision)
         {
-            foreach (var (regex,expect) in _location.SortOption.RevSpecRules)
+            foreach (var (regex, expect) in _location.SortOption.RevSpecRules)
             {
                 if (regex.IsMatch(fileName) == expect)
                 {
                     var insetIndex = fileName.IndexOf(_fileExtensionSeparator);
-                     fileName = fileName.Insert(insetIndex == -1 
-                             ? fileName.Length 
-                             : insetIndex ,
-                        $"_r{revision}");
-                     break;
+                    fileName = fileName.Insert(insetIndex == -1
+                            ? fileName.Length
+                            : insetIndex,
+                       $"_r{revision}");
+                    break;
                 }
             }
             return fileName;
         }
 
-        public string ProvideExtendPath(StringBuilder pathBuilder,string fileName)
+        public string ProvideExtendPath(StringBuilder pathBuilder, string fileName)
         {
             pathBuilder.Append(_separator);
-            var result = TryAsRuleSort(pathBuilder,fileName);
+            var result = TryAsRuleSort(pathBuilder, fileName);
             if (result)
             {
                 return pathBuilder.ToString();
@@ -73,27 +65,27 @@ namespace Seventh.Resource.Services
                 return AsClassSort(pathBuilder, fileName);
             }
 
-            return fileName.IndexOf(_defaultNameSeparator) == -1 
+            return fileName.IndexOf(_defaultNameSeparator) == -1
                 ? AsTypeSort(pathBuilder, fileName)
                 : AsFirstClassSort(pathBuilder, fileName);
         }
 
 
-        private static ReadOnlySpan<char> RemoveIf(ReadOnlySpan<char> text ,char splitChar)
+        private static ReadOnlySpan<char> RemoveIf(ReadOnlySpan<char> text, char splitChar)
         {
             var index = text.IndexOf(splitChar);
-            return index != -1 ? text.Slice(0,index) : text;
+            return index != -1 ? text.Slice(0, index) : text;
         }
 
-        private static ReadOnlySpan<char> TakeIf(ReadOnlySpan<char> text ,char splitChar)
+        private static ReadOnlySpan<char> TakeIf(ReadOnlySpan<char> text, char splitChar)
         {
             var index = text.IndexOf(splitChar);
             return index != -1 ? text.Slice(index + 1) : text;
         }
 
-        public bool TryAsRuleSort(StringBuilder pathBuilder,string fileName)
+        public bool TryAsRuleSort(StringBuilder pathBuilder, string fileName)
         {
-            foreach (var (regex,path) in _location.SortOption.ConsumeRules)
+            foreach (var (regex, path) in _location.SortOption.ConsumeRules)
             {
                 if (!regex.IsMatch(fileName))
                 {
@@ -108,7 +100,7 @@ namespace Seventh.Resource.Services
 
 
 
-        public string AsTypeSort(StringBuilder pathBuilder,string fileName)
+        public string AsTypeSort(StringBuilder pathBuilder, string fileName)
         {
             var extension = TakeIf(fileName, _fileExtensionSeparator);
             var pathPart = new Span<char>(new char[extension.Length]);
@@ -122,7 +114,7 @@ namespace Seventh.Resource.Services
 
         public string AsFirstClassSort(StringBuilder pathBuilder, string fileName)
         {
-            var firstClass = RemoveIf(fileName,_defaultNameSeparator);
+            var firstClass = RemoveIf(fileName, _defaultNameSeparator);
             var pathPart = new Span<char>(new char[firstClass.Length]);
             firstClass.ToLowerInvariant(pathPart);
             pathBuilder.Append(pathPart);

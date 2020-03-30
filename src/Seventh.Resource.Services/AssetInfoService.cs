@@ -33,7 +33,7 @@ namespace Seventh.Resource.Services
             }
 
             var classNameList = new List<string>();
-            AddAllClassName(classNameList,new DirectoryInfo(directory));
+            AddAllClassName(classNameList, new DirectoryInfo(directory));
             return Task.FromResult(classNameList as ICollection<string>);
         }
 
@@ -186,7 +186,7 @@ namespace Seventh.Resource.Services
             {
                 foreach (var info in infos)
                 {
-                    classNameList.Add(info.FullName.Replace(string.Concat(_pathOption.AssetPath.SortedAssetPath,Path.DirectorySeparatorChar), string.Empty));
+                    classNameList.Add(info.FullName.Replace(string.Concat(_pathOption.AssetPath.SortedAssetPath, Path.DirectorySeparatorChar), string.Empty));
                     AddAllClassName(classNameList, info);
                 }
                 infos = Array.Empty<DirectoryInfo>();

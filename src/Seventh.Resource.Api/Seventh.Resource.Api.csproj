@@ -13,17 +13,26 @@
     <PackageReference Include="Mapster" Version="5.2.0" />
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.10.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.6" />
-    <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="5.1.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="5.2.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.2.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Seventh.Core\Seventh.Core.csproj" />
+    <ProjectReference Include="..\Seventh.Resource.Api.Data\Seventh.Resource.Api.Data.csproj" />
     <ProjectReference Include="..\Seventh.Resource\Seventh.Resource.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\DependencyValidation\DependencyValidation.layerdiagram" Link="DependencyValidation.layerdiagram">
+      <Visible>False</Visible>
+    </AdditionalFiles>
+    <None Include="..\..\DependencyValidation\DependencyValidation.layerdiagram.layout" Link="DependencyValidation.layerdiagram.layout" />
+    <None Include="..\..\DependencyValidation\DependencyValidation.layerdiagram.suppressions" Link="DependencyValidation.layerdiagram.suppressions" />
   </ItemGroup>
 
 

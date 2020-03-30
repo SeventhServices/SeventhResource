@@ -32,7 +32,7 @@ namespace Seventh.Resource.Services
 
         public void Enqueue(DownloadFileTask task)
         {
-            if (_taskQueue.Any(t => 
+            if (_taskQueue.Any(t =>
                 t.FileName.Equals(task.FileName)))
             {
                 return;
@@ -67,19 +67,19 @@ namespace Seventh.Resource.Services
 
             if (_downloadService == null)
             {
-                _downloadService = new DownloadService(_client,_sortService,_location);
+                _downloadService = new DownloadService(_client, _sortService, _location);
             }
 
             var eventArgs = new DownloadCompleteEventArgs();
             if (task.Revision != null)
             {
-                (eventArgs.Result, eventArgs.Info) = 
+                (eventArgs.Result, eventArgs.Info) =
                     await _downloadService.TryDownloadAtRevisionAndSortAsync(
                         task.FileName, task.Revision.Value, task.NeedHash == true);
             }
             else
-            {               
-                (eventArgs.Result, eventArgs.Info) = 
+            {
+                (eventArgs.Result, eventArgs.Info) =
                     await _downloadService.TryDownloadAtMirrorAndSortAsync(
                             task.FileName, task.NeedHash);
             }

@@ -1,13 +1,8 @@
-﻿using Seventh.Core.Dto.Response.Resource;
-using Seventh.Core.Dto.Response.Status;
-using System;
-using System.Net.Http;
-using System.Reflection;
-using Seventh.Core.Abstractions.Extend;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Seventh.Core.Extend;
+using Seventh.Core.Abstractions.Extend;
 using Seventh.Core.Dto.Request.Resource;
+using Seventh.Core.Dto.Response.Resource;
 
 namespace Seventh.Core.Services
 {
@@ -23,29 +18,29 @@ namespace Seventh.Core.Services
             BaseUrl = location.ResourceServiceUrl;
         }
 
-        public async Task<DownloadAssetDto> TryDownloadNewFileAsync(string fileName,int revision, bool needHash = false)
+        public async Task<DownloadAssetDto> TryDownloadNewFileAsync(string fileName, int revision, bool needHash = false)
         {
-            var queries = new []
+            var queries = new[]
             {
                 new KeyValuePair<string, string>(nameof(revision),revision.ToString()),
                 new KeyValuePair<string, string>(nameof(needHash),needHash.ToString()),
-            }; 
-            return await _httpExtend.TryJsonGetAsync<DownloadAssetDto>(string.Concat(BaseUrl,"asset/download/",fileName),queries);
+            };
+            return await _httpExtend.TryJsonGetAsync<DownloadAssetDto>(string.Concat(BaseUrl, "asset/download/", fileName), queries);
         }
-        
+
         public async Task<DownloadAssetDto> TryDownloadLargeCardAsync(int cardId)
         {
-            return await _httpExtend.TryJsonPostAsync<DownloadAssetDto>(string.Concat(BaseUrl,"asset/download/",cardId.ToString()) );
+            return await _httpExtend.TryJsonPostAsync<DownloadAssetDto>(string.Concat(BaseUrl, "asset/download/", cardId.ToString()));
         }
 
         public async Task<IEnumerable<DownloadAssetDto>> TryDownloadNewFilesAsync(IEnumerable<GetAssetDto> dtoList)
         {
-            return await _httpExtend.TryJsonPostAsync<IEnumerable<GetAssetDto>,IEnumerable<DownloadAssetDto>>(string.Concat(BaseUrl,"asset/download/"),dtoList);
+            return await _httpExtend.TryJsonPostAsync<IEnumerable<GetAssetDto>, IEnumerable<DownloadAssetDto>>(string.Concat(BaseUrl, "asset/download/"), dtoList);
         }
 
         public async Task<RefreshedDownloadUrlDto> UpdateDownloadUrl()
         {
-            return await _httpExtend.TryJsonPostAsync<RefreshedDownloadUrlDto>(string.Concat(BaseUrl,"config/downloadUrl"));
+            return await _httpExtend.TryJsonPostAsync<RefreshedDownloadUrlDto>(string.Concat(BaseUrl, "config/downloadUrl"));
         }
     }
 }

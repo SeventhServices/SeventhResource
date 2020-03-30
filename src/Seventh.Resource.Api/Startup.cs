@@ -1,20 +1,20 @@
 using System;
-using Seventh.Core.Services;
-using Seventh.Resource.Services;
+using System.Security.Authentication;
+using Mapster;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Seventh.Resource.Common.Options;
-using Seventh.Resource.Common.Entities;
-using Seventh.Core.Dto.Response.Resource;
-using Seventh.Core.Utilities;
 using Seventh.Core;
-using Mapster;
-using System.Security.Authentication;
+using Seventh.Core.Dto.Response.Resource;
+using Seventh.Core.Services;
+using Seventh.Core.Utilities;
 using Seventh.Resource.Api.OpenApi;
+using Seventh.Resource.Common.Entities;
+using Seventh.Resource.Common.Options;
+using Seventh.Resource.Services;
 
 namespace Seventh.Resource.Api
 {
@@ -83,7 +83,7 @@ namespace Seventh.Resource.Api
             {
                 endpoints.MapControllers();
             });
-            
+
             app.UseReDoc(options =>
             {
                 options.SpecUrl = "/master.json";

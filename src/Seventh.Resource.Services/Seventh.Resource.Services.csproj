@@ -7,6 +7,12 @@
     <LangVersion>8.0</LangVersion>
     <UserSecretsId>54b8b02b-d531-4e8b-8f2f-058f9c4d4b9e</UserSecretsId>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\DependencyValidation\DependencyValidation.layerdiagram" Link="DependencyValidation.layerdiagram">
+      <Visible>False</Visible>
+    </AdditionalFiles>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.DependencyValidation.Analyzers" Version="0.10.0" />

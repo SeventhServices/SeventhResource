@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-using Microsoft.AspNetCore.Mvc;
-using Seventh.Resource.Services;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Seventh.Resource.Api.Controllers
 {

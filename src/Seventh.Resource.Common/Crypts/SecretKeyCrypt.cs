@@ -29,7 +29,7 @@ namespace Seventh.Resource.Common.Crypts
             foreach (var b in encryptedKeyBytes)
             {
                 stringBuilder.Append(Convert.ToString(b, 16)
-                    .PadLeft(2,'0'));
+                    .PadLeft(2, '0'));
             }
 
             return stringBuilder.ToString();
@@ -41,7 +41,7 @@ namespace Seventh.Resource.Common.Crypts
             using var cryptoTransform = Managed.CreateDecryptor();
 
             var keyBytes = cryptoTransform.TransformFinalBlock(
-                encryptedKeyBytes, 0, 
+                encryptedKeyBytes, 0,
                 encryptedKeyBytes.Length);
             return Encoding.UTF8.GetString(keyBytes);
         }

@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Seventh.Resource.Common", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Seventh.Resource.Services", "src\Seventh.Resource.Services\Seventh.Resource.Services.csproj", "{005F61DE-B490-4AEE-BDF4-87DEAC119F72}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Seventh.Resource.CommonTest", "tests\Seventh.Resource.CommonTest\Seventh.Resource.CommonTest.csproj", "{6A0D78A8-892F-485A-AC0F-04D1A1F29D53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Seventh.Resource.CommonTest", "test\Seventh.Resource.CommonTest\Seventh.Resource.CommonTest.csproj", "{6A0D78A8-892F-485A-AC0F-04D1A1F29D53}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{AB603062-CBDC-4664-B46F-CD8EFAA6DD1B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{AB603062-CBDC-4664-B46F-CD8EFAA6DD1B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F8987548-22AF-4A04-B946-7D54A0B42617}"
 EndProject
@@ -25,7 +25,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Seventh.Resource.Api", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Seventh.Core", "src\Seventh.Core\Seventh.Core.csproj", "{237CE80C-DF11-44F8-8A31-F17F35B82177}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Seventh.Resource.ServicesTests", "Seventh.Resource.ServicesTests\Seventh.Resource.ServicesTests.csproj", "{321A5DCD-8DCC-4E21-8264-C635FADE5BD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Seventh.Resource.ServicesTests", "test\Seventh.Resource.ServicesTests\Seventh.Resource.ServicesTests.csproj", "{321A5DCD-8DCC-4E21-8264-C635FADE5BD2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Seventh.Resource.DatabaseTest", "test\Seventh.Resource.DatabaseTest\Seventh.Resource.DatabaseTest.csproj", "{C9F89421-8990-41FD-8811-B1A0904A216B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Seventh.Resource.Data", "src\Seventh.Resource.Database\Seventh.Resource.Data.csproj", "{7769240B-8479-48B8-9052-01EE04DE9D0F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Seventh.Resource.Api.Data", "src\Seventh.Resource.Api.Data\Seventh.Resource.Api.Data.csproj", "{33BD83A0-3913-43EC-ADC6-1341BF6B3FCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +67,18 @@ Global
 		{321A5DCD-8DCC-4E21-8264-C635FADE5BD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{321A5DCD-8DCC-4E21-8264-C635FADE5BD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{321A5DCD-8DCC-4E21-8264-C635FADE5BD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9F89421-8990-41FD-8811-B1A0904A216B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9F89421-8990-41FD-8811-B1A0904A216B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9F89421-8990-41FD-8811-B1A0904A216B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9F89421-8990-41FD-8811-B1A0904A216B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7769240B-8479-48B8-9052-01EE04DE9D0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7769240B-8479-48B8-9052-01EE04DE9D0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7769240B-8479-48B8-9052-01EE04DE9D0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7769240B-8479-48B8-9052-01EE04DE9D0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33BD83A0-3913-43EC-ADC6-1341BF6B3FCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33BD83A0-3913-43EC-ADC6-1341BF6B3FCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33BD83A0-3913-43EC-ADC6-1341BF6B3FCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33BD83A0-3913-43EC-ADC6-1341BF6B3FCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +91,9 @@ Global
 		{10F13DAB-BFB0-474D-ABEF-7CCED8CF4A8F} = {F8987548-22AF-4A04-B946-7D54A0B42617}
 		{237CE80C-DF11-44F8-8A31-F17F35B82177} = {F8987548-22AF-4A04-B946-7D54A0B42617}
 		{321A5DCD-8DCC-4E21-8264-C635FADE5BD2} = {AB603062-CBDC-4664-B46F-CD8EFAA6DD1B}
+		{C9F89421-8990-41FD-8811-B1A0904A216B} = {AB603062-CBDC-4664-B46F-CD8EFAA6DD1B}
+		{7769240B-8479-48B8-9052-01EE04DE9D0F} = {F8987548-22AF-4A04-B946-7D54A0B42617}
+		{33BD83A0-3913-43EC-ADC6-1341BF6B3FCF} = {F8987548-22AF-4A04-B946-7D54A0B42617}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D04C870-5D64-451F-81EE-1DC6FA2731A0}

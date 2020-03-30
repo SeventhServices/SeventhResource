@@ -55,7 +55,9 @@ namespace Seventh.Resource.Common.Crypts
 
         public static string DecryptByTripleDes(string key, string iv, string encryptedText)
         {
+#pragma warning disable CA5350 // 不要使用弱加密算法
             using var tripleDes = TripleDES.Create();
+#pragma warning restore CA5350 // 不要使用弱加密算法
             tripleDes.Key = Encoding.ASCII.GetBytes(key);
             tripleDes.IV = CommonUtil.ConvertHexStringToByte(iv);
             tripleDes.Mode = CipherMode.CBC;
@@ -73,7 +75,7 @@ namespace Seventh.Resource.Common.Crypts
 
         public static string Decrypt(string str)
         {
-            if (str == null) {throw new ArgumentNullException(nameof(str));}
+            if (str == null) { throw new ArgumentNullException(nameof(str)); }
 
             var array = new byte[str.Length / 2];
             for (var i = 0; i < CommonUtil.Min(array.Length, Rand.Length); i++)

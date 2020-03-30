@@ -5,6 +5,6 @@
         public bool CanFound { get; set; }
         public bool DownloadCompleted { get; set; }
         public string DownloadFileName { get; set; }
-        public AssetInfoDto FileInfo {get; set; }
+        public AssetInfoDto FileInfo { get; set; }
     }
 }

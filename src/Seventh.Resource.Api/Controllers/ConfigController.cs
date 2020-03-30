@@ -15,7 +15,7 @@ namespace Seventh.Resource.Api.Controllers
         private readonly SevenStatusService _statusService;
         private readonly ResourceLocation _location;
 
-        public ConfigController(SevenStatusService statusService,ResourceLocation location, IHttpClientFactory httpClientFactory)
+        public ConfigController(SevenStatusService statusService, ResourceLocation location, IHttpClientFactory httpClientFactory)
         {
             _statusService = statusService;
             _location = location;

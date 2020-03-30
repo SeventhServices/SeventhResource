@@ -1,9 +1,6 @@
-﻿using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Seventh.Core.Abstractions.Extend;
 using Seventh.Core.Dto.Response.Status;
-using Seventh.Core.Extend;
 
 namespace Seventh.Core.Services
 {

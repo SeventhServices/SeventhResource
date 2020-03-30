@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Seventh.Core.Dto.Response.Resource
+﻿namespace Seventh.Core.Dto.Response.Resource
 {
     public class AssetFileInfoDto
     {
@@ -11,6 +7,6 @@ namespace Seventh.Core.Dto.Response.Resource
         public long Size { get; set; }
         public string Extension { get; set; }
         public string Url { get; set; }
-        public bool IsExist { get; set;}
+        public bool IsExist { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace Seventh.Core.Utilities
 {
@@ -12,13 +11,13 @@ namespace Seventh.Core.Utilities
             var directories = filePath.Split(Path.DirectorySeparatorChar,
                 StringSplitOptions.RemoveEmptyEntries);
             var fileName = directories.Last();
-            var url = directories.SkipLast(1).Select( 
+            var url = directories.SkipLast(1).Select(
                 d => d.ToLowerInvariant()).ToArray();
             if (url.Length == 0)
             {
-                return string.Concat(baseUrl,fileName); 
+                return string.Concat(baseUrl, fileName);
             }
-            return string.Concat(baseUrl,string.Join("/", url),"/",fileName); 
+            return string.Concat(baseUrl, string.Join("/", url), "/", fileName);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Seventh.Resource.Common.Helpers
         {
             var fileName = Path.GetFileName(filePath);
             var encVersion = AssetCrypt.IdentifyEncVersion(filePath);
-            await DecryptAsync(filePath, saveDirectory.AppendPath(Rename(fileName, encVersion)), 
+            await DecryptAsync(filePath, saveDirectory.AppendPath(Rename(fileName, encVersion)),
                     encVersion, IdentifyShouldLz4(fileName))
                 .ConfigureAwait(false);
         }
@@ -51,7 +51,8 @@ namespace Seventh.Resource.Common.Helpers
                 .ConfigureAwait(false);
             await using var fileStream = File.OpenWrite(savePath);
             await fileStream.WriteAsync(
-                AssetCrypt.Decrypt(fileBytes, lz4, encVersion));
+                AssetCrypt.Decrypt(fileBytes, lz4, encVersion))
+                .ConfigureAwait(false);
             fileStream.Close();
         }
 
@@ -78,9 +79,9 @@ namespace Seventh.Resource.Common.Helpers
 
             var type = Path.GetExtension(filePath);
 
-            return type.Equals(".txt",StringComparison.OrdinalIgnoreCase) ||
-                   type.Equals(".sql",StringComparison.OrdinalIgnoreCase) ||
-                   type.Equals(".json",StringComparison.OrdinalIgnoreCase);
+            return type.Equals(".txt", StringComparison.OrdinalIgnoreCase) ||
+                   type.Equals(".sql", StringComparison.OrdinalIgnoreCase) ||
+                   type.Equals(".json", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

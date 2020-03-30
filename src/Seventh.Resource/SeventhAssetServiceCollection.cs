@@ -35,7 +35,7 @@ namespace Seventh.Resource
             services.TryAddScoped<OneByOneDownloadService>();
             services.TryAddSingleton<SortService>();
             services.TryAddSingleton<QueueDownloadService>();
-                        services.TryAddSingleton<AssetInfoService>();
+            services.TryAddSingleton<AssetInfoService>();
         }
     }
 }

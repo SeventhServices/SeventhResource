@@ -27,7 +27,9 @@ namespace Seventh.Resource.Common.Files
                     Add(GetString(bytes), GetString(bytes));
                 }
             }
+#pragma warning disable CA1031 // 不捕获常规异常类型
             catch
+#pragma warning restore CA1031 // 不捕获常规异常类型
             {
                 Clear();
             }

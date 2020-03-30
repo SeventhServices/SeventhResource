@@ -45,12 +45,12 @@ namespace Seventh.Core.Extend
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<(bool,HttpResponseMessage)> TryGetAsync(string url)
+        public async Task<(bool, HttpResponseMessage)> TryGetAsync(string url)
         {
             var request = new HttpRequestMessage
             {
                 RequestUri = new Uri(url),
-                Method = HttpMethod.Get 
+                Method = HttpMethod.Get
             };
             return await TrySendAsync(request);
         }
@@ -80,7 +80,7 @@ namespace Seventh.Core.Extend
         {
             BeforeSendRequest?.Invoke(request);
             var response = await _client.SendAsync(request);
-            return (response.IsSuccessStatusCode,response);
+            return (response.IsSuccessStatusCode, response);
         }
 
     }
