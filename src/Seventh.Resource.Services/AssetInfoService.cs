@@ -44,6 +44,7 @@ namespace Seventh.Resource.Services
 
             var directory = _pathOption.AssetPath
                 .SortedAssetPath.AppendPath(className);
+
             if (!Directory.Exists(directory))
             {
                 return Task.FromResult<ICollection<AssetFileInfo>>(null);
@@ -59,6 +60,7 @@ namespace Seventh.Resource.Services
                     Revision = FileNameHelper.ParseRev(fileInfo.Name),
                     Size = fileInfo.Length,
                     Path = fileInfo.FullName.Replace(_pathOption.RootPath, string.Empty)
+                                .TrimStart(Path.DirectorySeparatorChar)
                 });
             }
             return Task.FromResult(infos as ICollection<AssetFileInfo>);
@@ -96,6 +98,7 @@ namespace Seventh.Resource.Services
                         Revision = revision,
                         Size = fileInfo.Length,
                         Path = fileInfo.FullName.Replace(_pathOption.RootPath, string.Empty)
+                                .TrimStart(Path.DirectorySeparatorChar)
                     },
                     SortedFileInfo = new AssetFileInfo
                     {
@@ -103,6 +106,7 @@ namespace Seventh.Resource.Services
                         Revision = revision,
                         Size = realFileSize,
                         Path = sortedSavePath?.Replace(_pathOption.RootPath, string.Empty)
+                                .TrimStart(Path.DirectorySeparatorChar)
                     }
                 });
             }
@@ -149,7 +153,8 @@ namespace Seventh.Resource.Services
                     Name = fileName,
                     Revision = infoRevision,
                     Size = fileSize,
-                    Path = savePath.Replace(_pathOption.RootPath, string.Empty),
+                    Path = savePath.Replace(_pathOption.RootPath, string.Empty)
+                                .TrimStart(Path.DirectorySeparatorChar),
                 },
                 SortedFileInfo = new AssetFileInfo
                 {
@@ -157,6 +162,7 @@ namespace Seventh.Resource.Services
                     Revision = infoRevision,
                     Size = realFileSize,
                     Path = sortedSavePath?.Replace(_pathOption.RootPath, string.Empty)
+                                .TrimStart(Path.DirectorySeparatorChar)
                 }
             };
         }
@@ -169,7 +175,8 @@ namespace Seventh.Resource.Services
             {
                 foreach (var info in infos)
                 {
-                    classNameList.Add(info.FullName.Replace(string.Concat(_pathOption.AssetPath.SortedAssetPath, Path.DirectorySeparatorChar), string.Empty));
+                    classNameList.Add(info.FullName.Replace(_pathOption.AssetPath.SortedAssetPath, string.Empty)
+                        .TrimStart(Path.DirectorySeparatorChar));
                     AddAllClassName(classNameList, info);
                 }
                 infos = Array.Empty<DirectoryInfo>();

@@ -18,19 +18,55 @@ namespace Seventh.Resource.Api.Controllers
     public class AssetController : Controller
     {
         private readonly SevenResourceService _resourceService;
+        private readonly SevenStatusService _statusService;
         private readonly AssetInfoService _infoService;
         private readonly DownloadService _downloadService;
         private readonly QueueDownloadService _queueDownloadService;
 
         public AssetController(SevenResourceService resourceService,
+            SevenStatusService statusService,
             AssetInfoService infoService,
             DownloadService downloadService,
             QueueDownloadService queueDownloadService)
         {
             _resourceService = resourceService;
+            _statusService = statusService;
             _infoService = infoService;
             _downloadService = downloadService;
             _queueDownloadService = queueDownloadService;
+        }
+
+        [ResponseCache(Duration = 120)]
+        [HttpPost("download/basic", Name = nameof(TryDownloadBasic))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<DownloadAssetDto>> TryDownloadBasic()
+        {
+            var modify = await _statusService.TryGetBasicModifyAsync();
+            if (modify == null)
+            {
+                return NotFound();
+            }
+
+            var downloadFiles = new List<DownloadAssetDto>();
+            var fileUrls = modify.ModifyFiles;
+            foreach (var url in fileUrls)
+            {
+                _queueDownloadService.Enqueue(new DownloadFileTask 
+                { 
+                    FileName = url,
+                    IsBasicDownload = true,
+                    OverWrite = true
+                });
+                downloadFiles.Add(new DownloadAssetDto
+                {
+                    CanFound = true,
+                    DownloadCompleted = false,
+                    DownloadFileName = url
+                });
+            }
+            _queueDownloadService.DequeueAll();
+            return Ok(downloadFiles);
         }
 
         [ResponseCache(Duration = 120)]
@@ -83,8 +119,8 @@ namespace Seventh.Resource.Api.Controllers
                     downloadFileDto = new DownloadAssetDto
                     {
                         FileInfo = info.BuildAdapter()
-                    .AddParameters("baseUrl", _resourceService.BaseUrl)
-                    .AdaptToType<AssetInfoDto>()
+                            .AddParameters("baseUrl", _resourceService.BaseUrl)
+                            .AdaptToType<AssetInfoDto>()
                     };
                     downloadFileDto.DownloadFileName = dto.FileName;
                     downloadFileDto.DownloadCompleted = true;

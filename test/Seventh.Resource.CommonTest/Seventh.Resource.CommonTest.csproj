@@ -27,13 +27,7 @@
   <ItemGroup>
     <Folder Include="TestExample\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="..\..\DependencyValidation\DependencyValidation.layerdiagram" Link="DependencyValidation.layerdiagram">
-      <Visible>False</Visible>
-    </AdditionalFiles>
-  </ItemGroup>
-
+  
   <ItemGroup>
     <None Update="TestExample\login_bonus_435_01.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

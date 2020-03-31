@@ -27,13 +27,5 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <AdditionalFiles Include="..\..\DependencyValidation\DependencyValidation.layerdiagram" Link="DependencyValidation.layerdiagram">
-      <Visible>False</Visible>
-    </AdditionalFiles>
-    <None Include="..\..\DependencyValidation\DependencyValidation.layerdiagram.layout" Link="DependencyValidation.layerdiagram.layout" />
-    <None Include="..\..\DependencyValidation\DependencyValidation.layerdiagram.suppressions" Link="DependencyValidation.layerdiagram.suppressions" />
-  </ItemGroup>
-
 
 </Project>

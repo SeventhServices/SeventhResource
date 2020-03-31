@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Seventh.Core.Dto.Request.Resource;
 using Seventh.Core.Dto.Response.Resource;
 using Seventh.Core.Services;
+using Seventh.Resource.Common.Entities;
 using Seventh.Resource.Services;
 
 namespace Seventh.Resource.Api.Controllers
@@ -14,11 +15,14 @@ namespace Seventh.Resource.Api.Controllers
     {
         private readonly SevenStatusService _statusService;
         private readonly ResourceLocation _location;
+        private readonly QueueDownloadService _queueDownloadService;
 
-        public ConfigController(SevenStatusService statusService, ResourceLocation location, IHttpClientFactory httpClientFactory)
+        public ConfigController(SevenStatusService statusService, 
+            ResourceLocation location, QueueDownloadService queueDownloadService)
         {
             _statusService = statusService;
             _location = location;
+            _queueDownloadService = queueDownloadService;
         }
 
         [HttpPut("downloadUrl", Name = nameof(UpdateDownloadUrl))]
@@ -29,7 +33,6 @@ namespace Seventh.Resource.Api.Controllers
 
             return Ok(new RefreshedDownloadUrlDto
             {
-                Result = true,
                 NowDownloadUrl = _location.DownloadUrl
             });
         }
@@ -42,20 +45,16 @@ namespace Seventh.Resource.Api.Controllers
 
             if (info == null)
             {
-                return NotFound(new RefreshedDownloadUrlDto
-                {
-                    Result = false,
-                    NowDownloadUrl = _location.DownloadUrl
-                });
+                return NotFound();
             }
 
             _location.DownloadUrl = info.AssetVersion.DownloadUrl;
 
             return Ok(new RefreshedDownloadUrlDto
             {
-                Result = true,
                 NowDownloadUrl = _location.DownloadUrl
             });
         }
+
     }
 }

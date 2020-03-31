@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Seventh.Resource.Common.Entities;
 using Seventh.Resource.Common.Extensions;
@@ -33,11 +34,20 @@ namespace Seventh.Resource.Services
                 return (false, null);
             }
 
-            var info = await DecryptAndSort(fileName, string.Concat(LocalPathOption.RootPath, savePath), revision);
-            info.SetRevision(revision);
-            info.MirrorFileInfo.Path = info.MirrorFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
-            info.SortedFileInfo.Path = info.SortedFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
-            return (true, info);
+            try
+            {
+                var info = await DecryptAndSortAsync(fileName, string.Concat(LocalPathOption.RootPath, savePath), revision);
+                info.SetRevision(revision);
+                info.MirrorFileInfo.Path = info.MirrorFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
+                info.SortedFileInfo.Path = info.SortedFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
+                return (true, info);
+            }
+            catch (CryptographicException e)
+            {
+                Console.WriteLine($"{savePath}:{e}");
+                return (false, null);
+            }
+
         }
 
         public async Task<(bool result, AssetInfo info)>
@@ -54,11 +64,19 @@ namespace Seventh.Resource.Services
                 return (false, null);
             }
 
-            var info = await DecryptAndSort(fileName, string.Concat(LocalPathOption.RootPath, savePath));
-            info.SetRevision(0);
-            info.MirrorFileInfo.Path = info.MirrorFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
-            info.SortedFileInfo.Path = info.SortedFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
-            return (true, info);
+            try
+            {
+                var info = await DecryptAndSortAsync(fileName, string.Concat(LocalPathOption.RootPath, savePath));
+                info.SetRevision(0);
+                info.MirrorFileInfo.Path = info.MirrorFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
+                info.SortedFileInfo.Path = info.SortedFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
+                return (true, info);
+            }
+            catch (CryptographicException e)
+            {
+                Console.WriteLine($"{savePath}:{e}");
+                return (false, null);
+            }
         }
 
         public async Task<(bool result, string savePath)>
@@ -80,7 +98,7 @@ namespace Seventh.Resource.Services
             var response = await _client.GetAsync(fileName);
             return !response.IsSuccessStatusCode
                 ? (false, null)
-                : (true, (await SaveFile(fileName, savePath, response))
+                : (true, (await SaveFileAsync(fileName, savePath, response))
                     .Replace(LocalPathOption.RootPath, string.Empty));
         }
 
@@ -102,7 +120,7 @@ namespace Seventh.Resource.Services
             var response = await _client.GetAsync(fileName);
             return !response.IsSuccessStatusCode
                 ? (false, null)
-                : (true, (await SaveFile(fileName, savePath, response))
+                : (true, (await SaveFileAsync(fileName, savePath, response))
                     .Replace(LocalPathOption.RootPath, string.Empty));
         }
 

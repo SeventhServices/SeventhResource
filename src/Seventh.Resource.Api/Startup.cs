@@ -11,6 +11,7 @@ using Seventh.Core;
 using Seventh.Core.Dto.Response.Resource;
 using Seventh.Core.Services;
 using Seventh.Core.Utilities;
+using Seventh.Resource.Api.Data;
 using Seventh.Resource.Api.OpenApi;
 using Seventh.Resource.Common.Entities;
 using Seventh.Resource.Common.Options;
@@ -33,6 +34,7 @@ namespace Seventh.Resource.Api
         {
             services.AddControllers();
             services.AddSeventhCore();
+            services.AddDataProvider();
             services.AddResponseCaching();
             services.AddSeventhResourceServices(option =>
             {
@@ -96,20 +98,38 @@ namespace Seventh.Resource.Api
             });
         }
 
-        private void InitialApplication(IServiceProvider services)
+        private async void InitialApplication(IServiceProvider services)
         {
             var statusService = services.GetService<SevenStatusService>();
             var location = services.GetService<ResourceLocation>();
+            var queue = services.GetService<QueueDownloadService>();
 
             try
             {
-                var info = statusService.TryGetVersionInfoAsync().Result;
+                var info = await statusService.TryGetVersionInfoAsync();
                 var downloadUrl = info.AssetVersion.DownloadUrl;
                 if (downloadUrl != null)
                 {
                     location.DownloadUrl = downloadUrl;
                 }
+            }
+            catch (AuthenticationException e)
+            {
+                Console.WriteLine(e);
+            }
 
+            try
+            {
+                var modify = await statusService.TryGetBasicModifyAsync();
+                if (modify != null)
+                {
+                    var fileUrls = modify.ModifyFiles;
+                    foreach (var url in fileUrls)
+                    {
+                        queue.Enqueue(new DownloadFileTask{ FileName = url, IsBasicDownload = true});
+                    }
+                    queue.DequeueAll();
+                }
             }
             catch (AuthenticationException e)
             {

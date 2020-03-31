@@ -2,7 +2,6 @@
 {
     public class RefreshedDownloadUrlDto
     {
-        public bool Result { get; set; }
         public string NowDownloadUrl { get; set; }
     }
 }

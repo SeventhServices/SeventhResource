@@ -7,11 +7,6 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <AdditionalFiles Include="..\..\DependencyValidation\DependencyValidation.layerdiagram" Link="DependencyValidation.layerdiagram">
-      <Visible>False</Visible>
-    </AdditionalFiles>
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="lz4net" Version="1.0.15.93" />

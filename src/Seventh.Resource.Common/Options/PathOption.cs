@@ -24,6 +24,7 @@ namespace Seventh.Resource.Common.Options
             AssetPath.MirrorAssetRootPath = Path.Combine(AssetPath.RootPath, "mirror");
             AssetPath.RevMirrorAssetPath = Path.Combine(AssetPath.MirrorAssetRootPath, "revisons");
             AssetPath.GameMirrorAssetPath = Path.Combine(AssetPath.MirrorAssetRootPath, "game");
+            AssetPath.BasicMirrorAssetPath = Path.Combine(AssetPath.MirrorAssetRootPath, "basic");
             AssetPath.ApkTempPath = Path.Combine(AssetPath.TempRootPath, "apk");
             AssetPath.AssetTempPath = Path.Combine(AssetPath.TempRootPath, "aseet");
             AssetPath.IndexTempPath = Path.Combine(AssetPath.TempRootPath, "index");
@@ -36,6 +37,7 @@ namespace Seventh.Resource.Common.Options
         public string MirrorAssetRootPath { get; set; }
         public string RevMirrorAssetPath { get; set; }
         public string GameMirrorAssetPath { get; set; }
+        public string BasicMirrorAssetPath { get; set; }
         public string TempRootPath { get; set; }
         public string ApkTempPath { get; set; }
         public string AssetTempPath { get; set; }

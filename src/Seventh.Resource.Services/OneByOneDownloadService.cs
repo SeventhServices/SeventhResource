@@ -36,7 +36,7 @@ namespace Seventh.Resource.Services
                 return (false, null);
             }
 
-            var info = await DecryptAndSort(fileName, string.Concat(LocalPathOption.RootPath, savePath));
+            var info = await DecryptAndSortAsync(fileName, string.Concat(LocalPathOption.RootPath, savePath));
             info.SetRevision(0);
             info.MirrorFileInfo.Path = info.MirrorFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
             info.SortedFileInfo.Path = info.SortedFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
@@ -57,7 +57,7 @@ namespace Seventh.Resource.Services
             var response = await _client.GetAsync(url);
             return !response.IsSuccessStatusCode
                 ? (false, null)
-                : (true, (await SaveFile(fileName, savePath, response))
+                : (true, (await SaveFileAsync(fileName, savePath, response))
                     .Replace(LocalPathOption.RootPath, string.Empty));
         }
 

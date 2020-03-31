@@ -11,7 +11,9 @@ namespace Seventh.Resource.Common.Options
             RevSpecRules.Add(new Regex(@"[Rr]ule"), true);
             RevSpecRules.Add(new Regex(@"[Uu]pdate"), true);
             RevSpecRules.Add(new Regex(@"[Tt]op"), true);
-            RevSpecRules.Add(new Regex(@"_\d{1}[\.]"), true);
+            RevSpecRules.Add(new Regex(@"_\d{1}\.jpg"), true);
+            RevSpecRules.Add(new Regex(@"_\d{1}\.png"), true);
+
             ConsumeRules.Add(new Regex(@"^m_[A-Za-z0-9_]+\.sql$"), "sql:");
             ConsumeRules.Add(new Regex(@"\.acb$"), "acb:");
             ConsumeRules.Add(new Regex(@"^^M[A-Za-z0-9_]+\."), "music:");

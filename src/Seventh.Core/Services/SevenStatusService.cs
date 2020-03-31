@@ -21,9 +21,19 @@ namespace Seventh.Core.Services
             return $"{_location.StatusServiceUrl}info/version";
         }
 
+        public string GetBasicModifyUrl()
+        {
+            return $"{_location.StatusServiceUrl}asset/basic/modify";
+        }
+
         public async Task<VersionInfoDto> TryGetVersionInfoAsync()
         {
             return await _httpExtend.TryJsonGetAsync<VersionInfoDto>(GetVersionInfoUrl());
+        }
+
+        public async Task<AssetModifyDto> TryGetBasicModifyAsync()
+        {
+            return await _httpExtend.TryJsonGetAsync<AssetModifyDto>(GetBasicModifyUrl());
         }
     }
 }

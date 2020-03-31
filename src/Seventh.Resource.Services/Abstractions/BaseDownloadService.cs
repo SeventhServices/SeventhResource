@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Seventh.Resource.Common.Crypts;
 using Seventh.Resource.Common.Entities;
@@ -20,9 +22,14 @@ namespace Seventh.Resource.Services.Abstractions
             LocalPathOption = location.PathOption;
         }
 
-        protected async Task<string> SaveFile(string fileName, string savePath, HttpResponseMessage response)
+        protected async Task<string> SaveFileAsync(string fileName, string savePath, HttpResponseMessage response)
         {
-            var tempSavePath = LocalPathOption.AssetPath.TempRootPath.AppendPath(fileName);
+            if (response is null)
+            {
+                throw new System.ArgumentNullException(nameof(response));
+            }
+
+            var tempSavePath = LocalPathOption.AssetPath.AssetTempPath.AppendPath(fileName);
             await using var fileStream = File.OpenWrite(tempSavePath);
             await response.Content.CopyToAsync(fileStream);
             fileStream.Close();
@@ -33,7 +40,7 @@ namespace Seventh.Resource.Services.Abstractions
         }
 
         protected async Task<AssetInfo>
-            DecryptAndSort(string fileName, string savePath)
+            DecryptAndSortAsync(string fileName, string savePath)
         {
             var encVersion = AssetCrypt.IdentifyEncVersion(fileName);
             var realFileName = AssetCryptHelper.Rename(fileName, encVersion);
@@ -98,7 +105,7 @@ namespace Seventh.Resource.Services.Abstractions
         }
 
         protected async Task<AssetInfo>
-            DecryptAndSort(string fileName, string savePath, int revision)
+            DecryptAndSortAsync(string fileName, string savePath, int revision)
         {
             var encVersion = AssetCrypt.IdentifyEncVersion(fileName);
             var realFileName = AssetCryptHelper.Rename(fileName, encVersion);
@@ -145,7 +152,7 @@ namespace Seventh.Resource.Services.Abstractions
             }
 
             await AssetCryptHelper.DecryptAsync(savePath, sortedSavePath, encVersion,
-                AssetCryptHelper.IdentifyShouldLz4(realFileName));
+                        AssetCryptHelper.IdentifyShouldLz4(realFileName));
 
             if (!revSortedSavePath.Equals(sortedSavePath))
             {

@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Seventh.Resource.Common.Options;
+using Seventh.Resource.Data.Abstractions;
+using Seventh.Resource.Database;
 using Seventh.Resource.Services;
 
 namespace Seventh.Resource
@@ -20,6 +22,7 @@ namespace Seventh.Resource
             services.TryAddSingleton<SortService>();
             services.TryAddSingleton<QueueDownloadService>();
             services.TryAddSingleton<AssetInfoService>();
+            services.TryAddSingleton<ISqlLoader, SqlLoader>();
         }
 
         public static void AddSeventhResourceServices(this IServiceCollection services, Action<ResourceOption> resourceOptionAction)
@@ -36,6 +39,7 @@ namespace Seventh.Resource
             services.TryAddSingleton<SortService>();
             services.TryAddSingleton<QueueDownloadService>();
             services.TryAddSingleton<AssetInfoService>();
+            services.TryAddSingleton<ISqlLoader, SqlLoader>();
         }
     }
 }

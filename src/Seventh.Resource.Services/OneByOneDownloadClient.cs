@@ -10,7 +10,7 @@ namespace Seventh.Resource.Services
         public OneByOneDownloadClient(HttpClient httpClient, ResourceLocation option)
         {
             httpClient.BaseAddress = new Uri(option.DownloadBaseUrl);
-            httpClient.Timeout = TimeSpan.FromMinutes(5);
+            httpClient.Timeout = TimeSpan.FromMinutes(15);
             Client = httpClient;
         }
     }
