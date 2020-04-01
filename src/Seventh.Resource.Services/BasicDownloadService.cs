@@ -36,21 +36,20 @@ namespace Seventh.Resource.Services
                     return (false, null);
                 }
                 savePath = await SaveFileAsync(fileName, savePath, response);
+                var fileList = ExtractZip(savePath);
+
+                foreach (var filePath in fileList)
+                {
+                    try
+                    {
+                        await DecryptAndSortAsync(Path.GetFileName(filePath), filePath);
+                    }
+                    catch (CryptographicException e)
+                    {
+                        Console.WriteLine($"{filePath}:{e}");
+                    }
+                };
             }
-
-            var fileList = ExtractZip(savePath);
-
-            foreach (var filePath in fileList)
-            {
-                try
-                {
-                    await DecryptAndSortAsync(Path.GetFileName(filePath), filePath);
-                }
-                catch (CryptographicException e)
-                {
-                    Console.WriteLine($"{filePath}:{e}");
-                }
-            };
 
             return (true, new AssetInfo
             {

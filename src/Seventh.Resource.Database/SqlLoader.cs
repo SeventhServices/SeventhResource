@@ -15,20 +15,19 @@ namespace Seventh.Resource.Database
     public class SqlLoader : ISqlLoader
     {
         private readonly AssetInfoService _assetInfoService;
-        private readonly ILogger<SqlLoader> _logger;
         private readonly PathOption _pathOption;
 
         private readonly string DafaultClassName = "sql";
         public string RootPath => Path.Combine(_pathOption.AssetPath.SortedAssetPath, DafaultClassName);
 
         public SqlLoader(AssetInfoService assetInfoService, 
-            ResourceLocation resourceLocation,
-            ILogger<SqlLoader> logger)
+            ResourceLocation resourceLocation)
         {
             _assetInfoService = assetInfoService;
-            _logger = logger;
             _pathOption = resourceLocation.PathOption;
         }
+
+        public ILogger<SqlLoader> Logger { get; set;}
 
         public async Task<string> TryGetLoadPathAsync<T>() where T : class
         {
@@ -39,14 +38,13 @@ namespace Seventh.Resource.Database
                          .Replace("m_",string.Empty).SnakeToCamel()
                          .Equals(typeof(T).Name));
 
-            _logger.LogInformation("Try load type {0} result is {1}", typeof(T).Name, info == null);
-
             return info == null ? null : Path.Combine(_pathOption.RootPath, info.Path);
         }
 
         public async Task<IEnumerable<T>> TryLoadAsync<T>() where T : class
         {
             var path = await TryGetLoadPathAsync<T>();
+            Logger?.LogInformation("Try load type {0} from path {1}", typeof(T).Name, path);
             return path == null ? null : await LoadAsync<T>(path);
         }
 

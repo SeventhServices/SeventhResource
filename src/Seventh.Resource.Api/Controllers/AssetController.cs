@@ -52,8 +52,8 @@ namespace Seventh.Resource.Api.Controllers
             var fileUrls = modify.ModifyFiles;
             foreach (var url in fileUrls)
             {
-                _queueDownloadService.Enqueue(new DownloadFileTask 
-                { 
+                _queueDownloadService.Enqueue(new DownloadFileTask
+                {
                     FileName = url,
                     IsBasicDownload = true,
                     OverWrite = true
@@ -143,8 +143,8 @@ namespace Seventh.Resource.Api.Controllers
                     downloadFileDto = new DownloadAssetDto
                     {
                         FileInfo = info.BuildAdapter()
-                    .AddParameters("baseUrl", _resourceService.BaseUrl)
-                    .AdaptToType<AssetInfoDto>()
+                            .AddParameters("baseUrl", _resourceService.BaseUrl)
+                            .AdaptToType<AssetInfoDto>()
                     };
                     downloadFileDto.DownloadFileName = dto.FileName;
                     downloadFileDto.DownloadCompleted = false;

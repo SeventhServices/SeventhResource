@@ -113,7 +113,6 @@ namespace Seventh.Resource.Services
                 DownloadCompete?.Invoke(this, eventArgs);
             }
 
-
             GC.Collect();
         }
 

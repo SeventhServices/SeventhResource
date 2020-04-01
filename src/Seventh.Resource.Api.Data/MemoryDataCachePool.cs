@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
@@ -30,7 +32,7 @@ namespace Seventh.Resource.Api.Data
             return await _memoryCache.GetOrCreateAsync(name,async e =>
             {
                 e.AddExpirationToken(_fileProvider.Watch(fileName));
-                return await SqlLoader.LoadAsync<T>(path);
+                return (await SqlLoader.LoadAsync<T>(path)).ToImmutableHashSet();
             });
         }
     }

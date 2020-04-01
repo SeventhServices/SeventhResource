@@ -1,10 +1,12 @@
+using Seventh.Resource.Data.Enums;
+
 namespace Seventh.Resource.Database.Entity
 {
 	public class Card
 	{
 		public int CardId { get; set; }
 		public int CharacterId { get; set; }
-		public string PotentialGroup { get; set; }
+		public int PotentialGroup { get; set; }
 		public int RarityId { get; set; }
 		public int CardTypeId { get; set; }
 		public int FacialImageId { get; set; }
@@ -34,7 +36,7 @@ namespace Seventh.Resource.Database.Entity
 		public int MaxIntimate { get; set; }
 		public bool StockFlg { get; set; }
 		public bool SignFlg { get; set; }
-		public string Role { get; set; }
+		public CardRole Role { get; set; }
 		public bool LimitedFlg { get; set; }
 		public long StartTime { get; set; }
 		public bool DeleteFlg { get; set; }

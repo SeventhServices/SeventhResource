@@ -58,7 +58,7 @@ namespace Seventh.Resource.Api
 
         public void Configure(IApplicationBuilder app, IServiceProvider services)
         {
-            InitialApplication(services);
+            InitialApplication(services.CreateScope().ServiceProvider);
 
             if (_environment.IsDevelopment())
             {
@@ -100,9 +100,10 @@ namespace Seventh.Resource.Api
 
         private async void InitialApplication(IServiceProvider services)
         {
+
             var statusService = services.GetService<SevenStatusService>();
             var location = services.GetService<ResourceLocation>();
-            var queue = services.GetService<QueueDownloadService>();
+
 
             try
             {
@@ -123,6 +124,7 @@ namespace Seventh.Resource.Api
                 var modify = await statusService.TryGetBasicModifyAsync();
                 if (modify != null)
                 {
+                    var queue = services.GetService<QueueDownloadService>();
                     var fileUrls = modify.ModifyFiles;
                     foreach (var url in fileUrls)
                     {

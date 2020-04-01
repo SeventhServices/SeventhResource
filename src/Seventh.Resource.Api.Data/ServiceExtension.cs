@@ -17,6 +17,7 @@ namespace Seventh.Resource.Api.Data
             services.TryAddSingleton<IDataCachePool, MemoryDataCachePool>();
             services.TryAddScoped<IContextProvider, ContextProvider>();
             services.TryAddScoped<IRepository<Card>, CardRepository>();
+            services.TryAddScoped<IRepository<Character>, CharacterRepository>();
             return services;
         }
     }
