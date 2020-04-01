@@ -28,7 +28,7 @@ namespace Seventh.Resource.Services
                 fileName = FileNameConverter.ToWithHashName(fileName);
             }
 
-            var (result, savePath) = await TryDownloadAtRevisionAsync(fileName, revision, needHash);
+            var (result, savePath) = await TryDownloadAtRevisionAsync(fileName, revision, false);
             if (!result)
             {
                 return (false, null);
@@ -58,7 +58,7 @@ namespace Seventh.Resource.Services
                 fileName = FileNameConverter.ToWithHashName(fileName);
             }
 
-            var (result, savePath) = await TryDownloadAtMirrorAsync(fileName, needHash);
+            var (result, savePath) = await TryDownloadAtMirrorAsync(fileName, false);
             if (!result)
             {
                 return (false, null);
