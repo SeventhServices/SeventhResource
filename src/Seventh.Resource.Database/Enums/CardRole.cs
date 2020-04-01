@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Serialization;
 
 namespace Seventh.Resource.Data.Enums
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum CardRole
     {
         Normal,

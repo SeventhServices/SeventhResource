@@ -32,7 +32,7 @@ namespace Seventh.Resource.Api.Data
             return await _memoryCache.GetOrCreateAsync(name,async e =>
             {
                 e.AddExpirationToken(_fileProvider.Watch(fileName));
-                return (await SqlLoader.LoadAsync<T>(path)).ToImmutableHashSet();
+                return (await SqlLoader.LoadAsync<T>(path)).ToArray();
             });
         }
     }

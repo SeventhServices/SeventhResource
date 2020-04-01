@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Namespace;
 using Seventh.Resource.Api.Data.Abstractions;
 using Seventh.Resource.Api.Data.Repository;
 using Seventh.Resource.Database.Entity;
@@ -18,6 +19,7 @@ namespace Seventh.Resource.Api.Data
             services.TryAddScoped<IContextProvider, ContextProvider>();
             services.TryAddScoped<IRepository<Card>, CardRepository>();
             services.TryAddScoped<IRepository<Character>, CharacterRepository>();
+            services.TryAddScoped<IRepository<CharacterVoice>, CharacterVoiceRepository>();
             return services;
         }
     }
