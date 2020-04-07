@@ -40,7 +40,7 @@ namespace Seventh.Resource.Api.Controllers
         [HttpPost("download/basic", Name = nameof(TryDownloadBasic))]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<DownloadAssetDto>> TryDownloadBasic()
+        public async Task<ActionResult<IEnumerable<DownloadAssetDto>>> TryDownloadBasic()
         {
             var modify = await _statusService.TryGetBasicModifyAsync();
             if (modify == null)

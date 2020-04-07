@@ -38,9 +38,14 @@ namespace Seventh.Core.Services
             return await _httpExtend.TryJsonPostAsync<IEnumerable<GetAssetDto>, IEnumerable<DownloadAssetDto>>(string.Concat(BaseUrl, "asset/download/"), dtoList);
         }
 
-        public async Task<RefreshedDownloadUrlDto> UpdateDownloadUrl()
+        public async Task<RefreshedDownloadUrlDto> TryUpdateDownloadUrl()
         {
             return await _httpExtend.TryJsonPostAsync<RefreshedDownloadUrlDto>(string.Concat(BaseUrl, "config/downloadUrl"));
+        }
+
+        public async Task<IEnumerable<DownloadAssetDto>> TryReftreshBasicAsset()
+        {
+            return await _httpExtend.TryJsonPostAsync<IEnumerable<DownloadAssetDto>>(string.Concat(BaseUrl, "asset/download/basic"));
         }
     }
 }
