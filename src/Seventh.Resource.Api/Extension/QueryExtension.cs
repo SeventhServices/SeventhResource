@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Seventh.Core.Dto.Request.Resource;
+using Seventh.Resource.Api.Core.Dto.Request;
 using Seventh.Resource.Common.Entities;
 
 namespace Seventh.Resource.Api

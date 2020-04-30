@@ -50,20 +50,16 @@ namespace Seventh.Resource.Services
                 return Task.FromResult<ICollection<AssetFileInfo>>(null);
             }
 
-            var infos = new List<AssetFileInfo>();
             var fileInfos = new DirectoryInfo(directory).GetFiles();
-            foreach (var fileInfo in fileInfos)
-            {
-                infos.Add(new AssetFileInfo
+            var infos = fileInfos.Select(fileInfo => new AssetFileInfo
                 {
                     Name = fileInfo.Name,
                     Revision = FileNameHelper.ParseRev(fileInfo.Name),
                     Size = fileInfo.Length,
                     Path = fileInfo.FullName.Replace(_pathOption.RootPath, string.Empty)
-                                .TrimStart(Path.DirectorySeparatorChar)
-                });
-            }
-            return Task.FromResult(infos as ICollection<AssetFileInfo>);
+                        .TrimStart(Path.DirectorySeparatorChar)
+                }).ToArray();
+            return Task.FromResult((ICollection<AssetFileInfo>) infos);
         }
 
         public async Task<ICollection<AssetInfo>>

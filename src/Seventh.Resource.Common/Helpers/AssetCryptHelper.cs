@@ -69,7 +69,6 @@ namespace Seventh.Resource.Common.Helpers
             }
 
             var encVersion1FilePath = AssetCrypt.ConvertFileName(filePath, encVersion, AssetCrypt.EncVersion.Ver1);
-
             return encVersion1FilePath?.Remove(encVersion1FilePath.Length - 4);
         }
 

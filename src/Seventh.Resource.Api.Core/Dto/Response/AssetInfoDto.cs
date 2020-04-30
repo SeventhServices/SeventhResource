@@ -1,4 +1,4 @@
-﻿namespace Seventh.Core.Dto.Response.Resource
+﻿namespace Seventh.Resource.Api.Core.Dto.Response
 {
     public class AssetInfoDto
     {

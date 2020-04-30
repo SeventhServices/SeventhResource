@@ -160,7 +160,6 @@ namespace Seventh.Resource.Services
 
         //public async Task DownloadCard(int cardId, FileSizeVersion sizeVersion = FileSizeVersion.Large)
         //{
-
         //    var fileName = FileNameConverter.ToLargeCardFile(cardId);
         //    var file = sizeVersion switch
         //    {
@@ -174,7 +173,6 @@ namespace Seventh.Resource.Services
         //    await file.SaveAsAsync(fileSavePath);
         //    File.Copy(fileSavePath,
         //        _optionService.PathOption.AssetPath.GameMirrorAssetPath.AppendPath(fileName), true);
-
         //}
     }
 }

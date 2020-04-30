@@ -1,9 +1,9 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Seventh.Core.Dto.Request.Resource;
-using Seventh.Core.Dto.Response.Resource;
 using Seventh.Core.Services;
+using Seventh.Resource.Api.Core.Dto.Request;
+using Seventh.Resource.Api.Core.Dto.Response;
 using Seventh.Resource.Common.Entities;
 using Seventh.Resource.Services;
 

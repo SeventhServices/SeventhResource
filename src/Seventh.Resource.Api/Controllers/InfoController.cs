@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using Seventh.Core.Dto.Request.Resource;
-using Seventh.Core.Dto.Response.Resource;
 using Seventh.Core.Services;
 using Seventh.Core.Utilities;
+using Seventh.Resource.Api.Core.Dto.Request;
+using Seventh.Resource.Api.Core.Dto.Response;
 using Seventh.Resource.Services;
 
 namespace Seventh.Resource.Api.Controllers

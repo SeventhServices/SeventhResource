@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Seventh.Core.Abstractions.Extend;
-using Seventh.Core.Dto.Request.Resource;
-using Seventh.Core.Dto.Response.Resource;
+using Seventh.Resource.Api.Core.Dto.Request;
+using Seventh.Resource.Api.Core.Dto.Response;
 
 namespace Seventh.Core.Services
 {

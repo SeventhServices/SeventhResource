@@ -1,4 +1,4 @@
-﻿namespace Seventh.Core.Dto.Request.Resource
+﻿namespace Seventh.Resource.Api.Core.Dto.Request
 {
     public class GetAssetParamsDto
     {
