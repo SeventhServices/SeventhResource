@@ -14,6 +14,7 @@ namespace Seventh.Resource.Services
         private readonly ITypedHttpClientFactory<DownloadClient> _downloadClientFactory;
         private readonly ITypedHttpClientFactory<OneByOneDownloadClient> _oneByOneDownloadClientFactory;
         private readonly SortService _sortService;
+        private readonly AssetInfoProvider _infoProvider;
         private readonly ResourceLocation _location;
         private readonly Queue<DownloadFileTask> _taskQueue = new Queue<DownloadFileTask>();
         public bool IsFree { get; set; } = true;
@@ -27,12 +28,13 @@ namespace Seventh.Resource.Services
         public QueueDownloadService(IHttpClientFactory clientFactory,
             ITypedHttpClientFactory<DownloadClient> downloadClientFactory,
             ITypedHttpClientFactory<OneByOneDownloadClient> oneByOneDownloadClientFactory,
-            SortService sortService, ResourceLocation location)
+            SortService sortService, AssetInfoProvider infoProvider, ResourceLocation location)
         {
             _clientFactory = clientFactory;
             _downloadClientFactory = downloadClientFactory;
             _oneByOneDownloadClientFactory = oneByOneDownloadClientFactory;
             _sortService = sortService;
+            _infoProvider = infoProvider;
             _location = location;
         }
 
@@ -68,15 +70,8 @@ namespace Seventh.Resource.Services
 
             if (task.IsBasicDownload)
             {
-                if (_onebyOneClient == null)
-                {
-                    _onebyOneClient = _oneByOneDownloadClientFactory.CreateClient(_clientFactory.CreateClient(nameof(QueueDownloadService)));
-                }
-
-                if (_basicDownloadService == null)
-                {
-                    _basicDownloadService = new BasicDownloadService(_onebyOneClient, _sortService, _location);
-                }
+                _onebyOneClient ??= _oneByOneDownloadClientFactory.CreateClient(_clientFactory.CreateClient(nameof(QueueDownloadService)));
+                _basicDownloadService ??= new BasicDownloadService(_onebyOneClient, _sortService, _infoProvider, _location);
 
                 var eventArgs = new DownloadCompleteEventArgs();
 
@@ -87,15 +82,8 @@ namespace Seventh.Resource.Services
             }
             else
             {
-                if (_client == null)
-                {
-                    _client = _downloadClientFactory.CreateClient(_clientFactory.CreateClient(nameof(QueueDownloadService)));
-                }
-
-                if (_downloadService == null)
-                {
-                    _downloadService = new DownloadService(_client, _sortService, _location);
-                }
+                _client ??= _downloadClientFactory.CreateClient(_clientFactory.CreateClient(nameof(QueueDownloadService)));
+                _downloadService ??= new DownloadService(_client, _sortService, _infoProvider, _location);
 
                 var eventArgs = new DownloadCompleteEventArgs();
                 if (task.Revision != null)

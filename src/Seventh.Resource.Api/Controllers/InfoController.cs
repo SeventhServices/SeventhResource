@@ -17,10 +17,10 @@ namespace Seventh.Resource.Api.Controllers
     [Route("[controller]")]
     public class InfoController : ControllerBase
     {
-        private readonly SevenResourceService _resourceService;
+        private readonly SeventhResourceService _resourceService;
         private readonly AssetInfoService _infoService;
 
-        public InfoController(SevenResourceService resourceService, AssetInfoService infoService)
+        public InfoController(SeventhResourceService resourceService, AssetInfoService infoService)
         {
             _resourceService = resourceService;
             _infoService = infoService;

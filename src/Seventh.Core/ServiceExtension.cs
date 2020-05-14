@@ -20,8 +20,8 @@ namespace Seventh.Core
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                 });
             services.TryAddSingleton<SeventhServiceLocation>();
-            services.TryAddScoped<SevenResourceService>();
-            services.TryAddScoped<SevenStatusService>();
+            services.TryAddScoped<SeventhResourceService>();
+            services.TryAddScoped<SeventhStatusService>();
         }
     }
 }

@@ -15,11 +15,15 @@ namespace Seventh.Resource.Services.Abstractions
     public abstract class BaseDownloadService
     {
         private readonly SortService _sortService;
+        private readonly AssetInfoProvider _infoProvider;
         protected readonly PathOption LocalPathOption;
 
-        protected BaseDownloadService(SortService sortService, ResourceLocation location)
+        protected BaseDownloadService(SortService sortService,
+            AssetInfoProvider infoProvider,
+            ResourceLocation location)
         {
             _sortService = sortService;
+            _infoProvider = infoProvider;
             LocalPathOption = location.PathOption;
         }
 
@@ -49,15 +53,17 @@ namespace Seventh.Resource.Services.Abstractions
             var realFileName = AssetCryptHelper.Rename(fileName, encVersion);
             var sortedSavePath = await _sortService.SortAsync(realFileName);
 
+            var encrypted = encVersion != AssetCrypt.EncVersion.NoEnc;
+
             if (File.Exists(sortedSavePath))
             {
-                return ProvideAssetInfo(fileName, realFileName, savePath, sortedSavePath);
+                return _infoProvider.ProvideAssetInfo(fileName, realFileName, savePath, sortedSavePath, encrypted);
             }
 
-            if (encVersion == AssetCrypt.EncVersion.NoEnc)
+            if (!encrypted)
             {
                 File.Copy(savePath, sortedSavePath);
-                return ProvideAssetInfo(fileName, realFileName, savePath, sortedSavePath);
+                return _infoProvider.ProvideAssetInfo(fileName, realFileName, savePath, sortedSavePath, false);
             }
 
             try
@@ -75,7 +81,7 @@ namespace Seventh.Resource.Services.Abstractions
                 File.Copy(savePath, sortedSavePath, true);
             }
 
-            return ProvideAssetInfo(fileName, realFileName, savePath, sortedSavePath);
+            return _infoProvider.ProvideAssetInfo(fileName, realFileName, savePath, sortedSavePath, true);
         }
 
         protected async Task<AssetInfo>
@@ -86,15 +92,17 @@ namespace Seventh.Resource.Services.Abstractions
             var sortedSavePath = await _sortService.SortAsync(realFileName);
             var revSortedSavePath = await _sortService.SortAsync(realFileName, revision);
 
+            var encrypted = encVersion != AssetCrypt.EncVersion.NoEnc;
+
             if (File.Exists(revSortedSavePath) && !overWrite)
             {
-                return ProvideAssetInfo(fileName, realFileName, savePath, revSortedSavePath);
+                return _infoProvider.ProvideAssetInfo(fileName, realFileName, savePath, revSortedSavePath, encrypted);
             }
 
-            if (encVersion == AssetCrypt.EncVersion.NoEnc)
+            if (!encrypted)
             {
                 File.Copy(savePath, sortedSavePath, true);
-                return ProvideAssetInfo(fileName, realFileName, savePath, sortedSavePath);
+                return _infoProvider.ProvideAssetInfo(fileName, realFileName, savePath, sortedSavePath, false);
             }
 
             try
@@ -118,27 +126,7 @@ namespace Seventh.Resource.Services.Abstractions
                 File.Copy(sortedSavePath, revSortedSavePath, true);
             }
 
-            return ProvideAssetInfo(fileName, realFileName, savePath, revSortedSavePath);
-        }
-
-        private AssetInfo ProvideAssetInfo(string fileName, string realFileName, 
-            string savePath, string sortedSavePath)
-        {
-            return new AssetInfo
-            {
-                MirrorFileInfo = new AssetFileInfo
-                {
-                    Name = fileName,
-                    Size = new FileInfo(savePath).Length,
-                    Path = savePath
-                },
-                SortedFileInfo = new AssetFileInfo
-                {
-                    Name = realFileName,
-                    Size = new FileInfo(sortedSavePath).Length,
-                    Path = sortedSavePath
-                }
-            };
+            return _infoProvider.ProvideAssetInfo(fileName, realFileName, savePath, revSortedSavePath, true);
         }
     }
 }

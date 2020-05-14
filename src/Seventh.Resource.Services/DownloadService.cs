@@ -14,8 +14,8 @@ namespace Seventh.Resource.Services
     {
         private readonly HttpClient _client;
 
-        public DownloadService(DownloadClient client, SortService sortService, ResourceLocation location)
-            : base(sortService, location)
+        public DownloadService(DownloadClient client, SortService sortService, AssetInfoProvider infoProvider, ResourceLocation location)
+            : base(sortService, infoProvider, location)
         {
             _client = client.Client;
         }
@@ -38,8 +38,8 @@ namespace Seventh.Resource.Services
             {
                 var info = await DecryptAndSortAsync(fileName, string.Concat(LocalPathOption.RootPath, savePath), revision);
                 info.SetRevision(revision);
-                info.MirrorFileInfo.Path = info.MirrorFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
-                info.SortedFileInfo.Path = info.SortedFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
+                info.Path = info.Path.Replace(LocalPathOption.RootPath, string.Empty);
+                info.SortedPath = info.SortedPath.Replace(LocalPathOption.RootPath, string.Empty);
                 return (true, info);
             }
             catch (CryptographicException e)
@@ -68,8 +68,8 @@ namespace Seventh.Resource.Services
             {
                 var info = await DecryptAndSortAsync(fileName, string.Concat(LocalPathOption.RootPath, savePath));
                 info.SetRevision(0);
-                info.MirrorFileInfo.Path = info.MirrorFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
-                info.SortedFileInfo.Path = info.SortedFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
+                info.Path = info.Path.Replace(LocalPathOption.RootPath, string.Empty);
+                info.SortedPath = info.SortedPath.Replace(LocalPathOption.RootPath, string.Empty);
                 return (true, info);
             }
             catch (CryptographicException e)
@@ -155,7 +155,7 @@ namespace Seventh.Resource.Services
 
             if (!result) return (false, false);
 
-            return length == null ? (true, false) : (true, !(length > maxLength));
+            return length == null ? (true, whenLengthNull) : (true, !(length > maxLength));
         }
 
         //public async Task DownloadCard(int cardId, FileSizeVersion sizeVersion = FileSizeVersion.Large)

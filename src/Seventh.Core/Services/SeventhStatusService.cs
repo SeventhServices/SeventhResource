@@ -4,12 +4,12 @@ using Seventh.Core.Dto.Response.Status;
 
 namespace Seventh.Core.Services
 {
-    public class SevenStatusService
+    public class SeventhStatusService
     {
         private readonly SeventhServiceLocation _location;
         private readonly IJsonHttpExtend _httpExtend;
 
-        public SevenStatusService(SeventhServiceLocation location,
+        public SeventhStatusService(SeventhServiceLocation location,
             IJsonHttpExtend httpExtend)
         {
             _location = location;

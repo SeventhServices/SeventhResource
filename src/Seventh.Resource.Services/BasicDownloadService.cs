@@ -16,8 +16,8 @@ namespace Seventh.Resource.Services
     {
         private readonly HttpClient _client;
 
-        public BasicDownloadService(OneByOneDownloadClient client, SortService sortService, ResourceLocation location)
-        : base(sortService, location)
+        public BasicDownloadService(OneByOneDownloadClient client, SortService sortService, AssetInfoProvider infoProvider, ResourceLocation location)
+        : base(sortService, infoProvider, location)
         {
             _client = client.Client;
         }
@@ -51,15 +51,13 @@ namespace Seventh.Resource.Services
                 };
             }
 
-            return (true, new AssetInfo
-            {
-                MirrorFileInfo = new AssetFileInfo
+            return (true, new AssetInfo().InitialUnsortedAsset(
+                new AssetFileInfo
                 {
                     Name = fileName,
                     Path = savePath,
                     Size = new FileInfo(savePath).Length
-                }
-            });
+                }));
         }
 
         public IEnumerable<string> ExtractZip(string path)

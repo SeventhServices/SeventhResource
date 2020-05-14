@@ -12,8 +12,8 @@ namespace Seventh.Resource.Services
     {
         private readonly HttpClient _client;
 
-        public OneByOneDownloadService(OneByOneDownloadClient client, SortService sortService, ResourceLocation location)
-        : base(sortService, location)
+        public OneByOneDownloadService(OneByOneDownloadClient client, SortService sortService, AssetInfoProvider infoProvider, ResourceLocation location)
+        : base(sortService, infoProvider, location)
         {
             _client = client.Client;
         }
@@ -38,8 +38,8 @@ namespace Seventh.Resource.Services
 
             var info = await DecryptAndSortAsync(fileName, string.Concat(LocalPathOption.RootPath, savePath));
             info.SetRevision(0);
-            info.MirrorFileInfo.Path = info.MirrorFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
-            info.SortedFileInfo.Path = info.SortedFileInfo.Path.Replace(LocalPathOption.RootPath, string.Empty);
+            info.Path = info.Path.Replace(LocalPathOption.RootPath, string.Empty);
+            info.SortedPath = info.SortedPath.Replace(LocalPathOption.RootPath, string.Empty);
             return (true, info);
         }
 

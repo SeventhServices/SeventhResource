@@ -14,11 +14,15 @@ namespace Seventh.Resource.Services
     public class AssetInfoService
     {
         private readonly SortService _sortService;
+        private readonly AssetInfoProvider _infoProvider;
         private readonly PathOption _pathOption;
 
-        public AssetInfoService(SortService sortService, ResourceLocation location)
+        public AssetInfoService(SortService sortService, 
+            AssetInfoProvider infoProvider,
+            ResourceLocation location)
         {
             _sortService = sortService;
+            _infoProvider = infoProvider;
             _pathOption = location.PathOption;
         }
 
@@ -86,25 +90,19 @@ namespace Seventh.Resource.Services
                     realFileSize = new FileInfo(sortedSavePath).Length;
                 }
 
-                infos.Add(new AssetInfo
-                {
-                    MirrorFileInfo = new AssetFileInfo
-                    {
-                        Name = fileName,
-                        Revision = revision,
-                        Size = fileInfo.Length,
-                        Path = fileInfo.FullName.Replace(_pathOption.RootPath, string.Empty)
-                                .TrimStart(Path.DirectorySeparatorChar)
-                    },
-                    SortedFileInfo = new AssetFileInfo
-                    {
-                        Name = realFileName,
-                        Revision = revision,
-                        Size = realFileSize,
-                        Path = sortedSavePath?.Replace(_pathOption.RootPath, string.Empty)
-                                .TrimStart(Path.DirectorySeparatorChar)
-                    }
-                });
+                var assetInfo = _infoProvider.ProvideAssetInfo(
+                    fileName : fileName,
+                    sortedFileName : realFileName,
+                    size : fileInfo.Length,
+                    sortedSize : realFileSize,
+                    savePath : fileInfo.FullName.Replace(_pathOption.RootPath, string.Empty)
+                        .TrimStart(Path.DirectorySeparatorChar),
+                    sortedSavePath : sortedSavePath.Replace(_pathOption.RootPath, string.Empty)
+                        .TrimStart(Path.DirectorySeparatorChar),
+                    encrypted : encVersion != AssetCrypt.EncVersion.NoEnc
+                );
+
+                infos.Add(assetInfo.SetRevision(revision));
             }
             return infos;
         }
@@ -119,16 +117,9 @@ namespace Seventh.Resource.Services
             }
 
             var isGameMirror = !revision.HasValue;
-            long fileSize = 0; long realFileSize = 0;
-
             var savePath = isGameMirror
                 ? _pathOption.AssetPath.GameMirrorAssetPath.AppendPath(fileName)
                 : _pathOption.AssetPath.RevMirrorAssetPath.AppendPath(revision.Value.ToString(), fileName);
-
-            if (File.Exists(savePath))
-            {
-                fileSize = new FileInfo(savePath).Length;
-            }
 
             var encVersion = AssetCrypt.IdentifyEncVersion(fileName);
             var realFileName = AssetCryptHelper.Rename(fileName, encVersion);
@@ -136,31 +127,17 @@ namespace Seventh.Resource.Services
                 ? await _sortService.SortAsync(realFileName)
                 : await _sortService.SortAsync(realFileName, revision.Value);
 
-            if (File.Exists(sortedSavePath))
-            {
-                realFileSize = new FileInfo(sortedSavePath).Length;
-            }
-
             var infoRevision = isGameMirror ? 0 : revision.Value;
-            return new AssetInfo
-            {
-                MirrorFileInfo = new AssetFileInfo
-                {
-                    Name = fileName,
-                    Revision = infoRevision,
-                    Size = fileSize,
-                    Path = savePath.Replace(_pathOption.RootPath, string.Empty)
-                                .TrimStart(Path.DirectorySeparatorChar),
-                },
-                SortedFileInfo = new AssetFileInfo
-                {
-                    Name = realFileName,
-                    Revision = infoRevision,
-                    Size = realFileSize,
-                    Path = sortedSavePath?.Replace(_pathOption.RootPath, string.Empty)
-                                .TrimStart(Path.DirectorySeparatorChar)
-                }
-            };
+            var assetInfo = _infoProvider.ProvideAssetInfo(
+                fileName : fileName,
+                sortedFileName : realFileName,
+                savePath : savePath.Replace(_pathOption.RootPath, string.Empty)
+                    .TrimStart(Path.DirectorySeparatorChar),
+                sortedSavePath : sortedSavePath.Replace(_pathOption.RootPath, string.Empty)
+                    .TrimStart(Path.DirectorySeparatorChar),
+                encrypted : encVersion != AssetCrypt.EncVersion.NoEnc
+            );
+            return assetInfo.SetRevision(infoRevision);
         }
 
         private void AddAllClassName(ICollection<string> classNameList,

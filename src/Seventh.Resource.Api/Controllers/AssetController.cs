@@ -17,14 +17,14 @@ namespace Seventh.Resource.Api.Controllers
     [Route("[controller]")]
     public class AssetController : Controller
     {
-        private readonly SevenResourceService _resourceService;
-        private readonly SevenStatusService _statusService;
+        private readonly SeventhResourceService _resourceService;
+        private readonly SeventhStatusService _statusService;
         private readonly AssetInfoService _infoService;
         private readonly DownloadService _downloadService;
         private readonly QueueDownloadService _queueDownloadService;
 
-        public AssetController(SevenResourceService resourceService,
-            SevenStatusService statusService,
+        public AssetController(SeventhResourceService resourceService,
+            SeventhStatusService statusService,
             AssetInfoService infoService,
             DownloadService downloadService,
             QueueDownloadService queueDownloadService)
@@ -93,7 +93,7 @@ namespace Seventh.Resource.Api.Controllers
             };
             downloadFileDto.DownloadCompleted = true;
             downloadFileDto.CanFound = true;
-            downloadFileDto.DownloadFileName = info.MirrorFileInfo.Name;
+            downloadFileDto.DownloadFileName = info.Name;
             return Ok(downloadFileDto);
         }
 
@@ -113,8 +113,7 @@ namespace Seventh.Resource.Api.Controllers
                 var info = await _infoService.TryGetAssetInfoAsync(
                     dto.FileName, dto.Revision, dto.NeedHash);
 
-                if (info.MirrorFileInfo.Size != 0
-                    && info.SortedFileInfo.Size != 0)
+                if (info.IsExist && info.IsSortedExist)
                 {
                     downloadFileDto = new DownloadAssetDto
                     {
@@ -200,8 +199,7 @@ namespace Seventh.Resource.Api.Controllers
             var info = await _infoService.TryGetAssetInfoAsync(
                 fileName, dto.Revision, dto.NeedHash);
 
-            if (info.MirrorFileInfo.Size != 0
-                && info.SortedFileInfo.Size != 0)
+            if (info.IsExist && info.IsSortedExist)
             {
                 downloadFileDto = new DownloadAssetDto
                 {

@@ -6,12 +6,12 @@ using Seventh.Resource.Api.Core.Dto.Response;
 
 namespace Seventh.Core.Services
 {
-    public class SevenResourceService
+    public class SeventhResourceService
     {
         private readonly IJsonHttpExtend _httpExtend;
         public string BaseUrl { get; }
 
-        public SevenResourceService(SeventhServiceLocation location,
+        public SeventhResourceService(SeventhServiceLocation location,
             IJsonHttpExtend httpExtend)
         {
             _httpExtend = httpExtend;

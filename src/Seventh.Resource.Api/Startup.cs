@@ -101,7 +101,7 @@ namespace Seventh.Resource.Api
         private async void InitialApplication(IServiceProvider services)
         {
 
-            var statusService = services.GetService<SevenStatusService>();
+            var statusService = services.GetService<SeventhStatusService>();
             var location = services.GetService<ResourceLocation>();
 
 
@@ -144,6 +144,16 @@ namespace Seventh.Resource.Api
                     src => UrlUtil.MakeFileUrl(
                         MapContext.Current.Parameters["baseUrl"].ToString()
                         , src.Path));
+            TypeAdapterConfig<AssetInfo, AssetInfoDto>
+                .NewConfig()
+                .Map(des => des.Url,
+                    src => UrlUtil.MakeFileUrl(
+                        MapContext.Current.Parameters["baseUrl"].ToString()
+                        , src.Path))
+                .Map(des => des.SortedUrl,
+                    src => UrlUtil.MakeFileUrl(
+                        MapContext.Current.Parameters["baseUrl"].ToString()
+                        , src.SortedPath));
 
             //var sortedPath = location.PathOption.AssetPath.SortedAssetPath;
             //var sortService = services.GetService<SortService>();

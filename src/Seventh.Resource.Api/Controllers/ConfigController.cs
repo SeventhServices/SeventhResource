@@ -13,11 +13,11 @@ namespace Seventh.Resource.Api.Controllers
     [Route("[controller]")]
     public class ConfigController : ControllerBase
     {
-        private readonly SevenStatusService _statusService;
+        private readonly SeventhStatusService _statusService;
         private readonly ResourceLocation _location;
         private readonly QueueDownloadService _queueDownloadService;
 
-        public ConfigController(SevenStatusService statusService, 
+        public ConfigController(SeventhStatusService statusService, 
             ResourceLocation location, QueueDownloadService queueDownloadService)
         {
             _statusService = statusService;

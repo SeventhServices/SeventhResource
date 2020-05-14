@@ -50,7 +50,7 @@ namespace Seventh.Resource.Api
 
             if (queryDto.Extension != null)
             {
-                infoQuery = infoQuery.Where(info => info.SortedFileInfo.Extension.Equals(queryDto.Extension));
+                infoQuery = infoQuery.Where(info => info.SortedExtension.Equals(queryDto.Extension));
             }
 
             return infoQuery;

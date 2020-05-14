@@ -20,6 +20,7 @@ namespace Seventh.Resource.ServicesTests
             serviceCollection.AddHttpClient<OneByOneDownloadClient>();
             serviceCollection.TryAddScoped<OneByOneDownloadService>();
             serviceCollection.TryAddSingleton<SortService>();
+            serviceCollection.TryAddSingleton<AssetInfoProvider>();
             _services = serviceCollection.BuildServiceProvider();
         }
 
