@@ -57,7 +57,15 @@ namespace Seventh.Resource.Services
             IsFree = false;
             while (_taskQueue.TryDequeue(out var task))
             {
-                await RunATask(task);
+                try
+                {
+                    await RunATask(task);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    Enqueue(task);
+                }
             }
             _client = null;
             _downloadService = null;

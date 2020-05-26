@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Seventh.Resource.Common.Crypts;
@@ -33,7 +32,7 @@ namespace Seventh.Resource.Services.Abstractions
         {
             if (response is null)
             {
-                throw new System.ArgumentNullException(nameof(response));
+                throw new ArgumentNullException(nameof(response));
             }
 
             var tempSavePath = LocalPathOption.AssetPath.AssetTempPath.AppendPath(fileName);

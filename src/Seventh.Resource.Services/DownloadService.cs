@@ -34,20 +34,11 @@ namespace Seventh.Resource.Services
                 return (false, null);
             }
 
-            try
-            {
-                var info = await DecryptAndSortAsync(fileName, string.Concat(LocalPathOption.RootPath, savePath), revision);
-                info.SetRevision(revision);
-                info.Path = info.Path.Replace(LocalPathOption.RootPath, string.Empty);
-                info.SortedPath = info.SortedPath.Replace(LocalPathOption.RootPath, string.Empty);
-                return (true, info);
-            }
-            catch (CryptographicException e)
-            {
-                Console.WriteLine($"{savePath}:{e}");
-                return (false, null);
-            }
-
+            var info = await DecryptAndSortAsync(fileName, string.Concat(LocalPathOption.RootPath, savePath), revision);
+            info.SetRevision(revision);
+            info.Path = info.Path.Replace(LocalPathOption.RootPath, string.Empty);
+            info.SortedPath = info.SortedPath.Replace(LocalPathOption.RootPath, string.Empty);
+            return (true, info);
         }
 
         public async Task<(bool result, AssetInfo info)>
@@ -64,19 +55,12 @@ namespace Seventh.Resource.Services
                 return (false, null);
             }
 
-            try
-            {
-                var info = await DecryptAndSortAsync(fileName, string.Concat(LocalPathOption.RootPath, savePath));
-                info.SetRevision(0);
-                info.Path = info.Path.Replace(LocalPathOption.RootPath, string.Empty);
-                info.SortedPath = info.SortedPath.Replace(LocalPathOption.RootPath, string.Empty);
-                return (true, info);
-            }
-            catch (CryptographicException e)
-            {
-                Console.WriteLine($"{savePath}:{e}");
-                return (false, null);
-            }
+            var info = await DecryptAndSortAsync(fileName, string.Concat(LocalPathOption.RootPath, savePath));
+            info.SetRevision(0);
+            info.Path = info.Path.Replace(LocalPathOption.RootPath, string.Empty);
+            info.SortedPath = info.SortedPath.Replace(LocalPathOption.RootPath, string.Empty);
+            return (true, info);
+
         }
 
         public async Task<(bool result, string savePath)>

@@ -10,7 +10,7 @@ namespace Seventh.Resource.Services
             string savePath, string sortedSavePath, bool encrypted)
         {
             var size = File.Exists(savePath) ? new FileInfo(savePath).Length : 0;
-            var sortedSize = File.Exists(sortedSavePath) ? new FileInfo(savePath).Length : 0;
+            var sortedSize = File.Exists(sortedSavePath) ? new FileInfo(sortedSavePath).Length : 0;
             return ProvideAssetInfo(
                 fileName, sortedFileName, 
                 size, sortedSize, 
