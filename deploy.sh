@@ -7,7 +7,16 @@
 		echo "invalid argument...";
 		exit 1;
 	fi
-
+	
+	echo "start pull image : $2"
+	docker pull $2 >> /dev/null 2>&1
+	rc=$?
+	if [[ $rc != 0 ]]; then
+		echo 'failed to pull container...'
+		exit $rc;
+	fi
+	echo "pulled image : $2"
+	
 	containers=$(docker ps -q --filter name=$1)
 	if test -n "$containers"; then
 		echo "found container : $containers"
@@ -20,7 +29,7 @@
 			fi
 		echo "stoped container : $containers"
 	fi
-	   
+
 	containers_stop=$(docker ps -q -a --filter name=$1)
 	if test -n "$containers_stop"; then
 		docker rm $(docker ps -q -a --filter name=$1) >> /dev/null 2>&1
@@ -33,27 +42,6 @@
 		echo "removed container : $containers_stop"
 	fi
 	
-	echo "start pull image : $2"
-	docker pull $2 >> /dev/null 2>&1
-	rc=$?
-	if [[ $rc != 0 ]]; then
-		echo 'failed to pull container...'
-		exit $rc;
-	fi
-	echo "pulled image : $2"
-	
-	danglings=$(docker images -f "dangling=true" -q)
-	if test -n "$danglings"; then
-		docker rmi $(docker images -f "dangling=true" -q) >> /dev/null 2>&1
-		rc=$?
-			if [[ $rc != 0 ]];
-			then
-				echo 'failed to remove danglings container...'
-				exit $rc;
-			fi
-		echo "removed old image : $danglings"
-	fi
-	   
 	containers_new=$(docker run -d --restart=always \
 		-v /data/sites/resource.t7s.sagilio.net/www/wwwroot:/app/wwwroot \
 	    -p 5000:80 --name $1 $2 ) >> /dev/null 2>&1
@@ -63,3 +51,15 @@
 		exit $rc;
 	fi
 	echo "start new container : $containers_new"
+	
+	danglings=$(docker images -f "dangling=true" -q)
+	if test -n "$danglings"; then
+		docker rmi $(docker images -f "dangling=true" -q) >> /dev/null 2>&1
+		rc=$?
+			if [[ $rc != 0 ]];
+			then
+				echo 'failed to remove danglings images...'
+				exit $rc;
+			fi
+		echo "removed old image : $danglings"
+	fi
